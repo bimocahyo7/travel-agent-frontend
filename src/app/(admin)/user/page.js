@@ -51,7 +51,14 @@ const User = () => {
 
     const handleEdit = (user) => {
         setEditingUser(user)
-        setFormData(user)
+        setFormData({
+            name: user.name || '',
+            email: user.email || '',
+            password: '', // Kosongkan password saat edit
+            phone: user.phone || '',
+            address: user.address || '',
+            role: user.role || ''
+        })
         setModalOpen(true)
     }
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import MalangImage from "../../../public/images/destination/malang.jpg";
-import BaliImage from "../../../public/images/destination/bali.jpg";
-import YogyaImage from "../../../public/images/destination/yogyakarta.jpg";
+import MalangImage from "@/public/images/destination/malang.jpg";
+import BaliImage from "@/public/images/destination/bali.jpg";
+import YogyaImage from "@/public/images/destination/yogyakarta.jpg";
 
 function Destination() {
   const cityDestinations = [

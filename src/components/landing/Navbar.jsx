@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Menu, X, TicketsPlane } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from '../../hooks/auth';
+import { useAuth } from '@/hooks/auth';
 
 function Navbar() {
   const { user } = useAuth({ middleware: 'guest' })

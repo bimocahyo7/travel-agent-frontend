@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation' // Import usePathname
-import { Home, User, Settings, Menu, X } from 'lucide-react'
+import { Home, User, Settings, Menu, X, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '@/hooks/auth'
 
@@ -88,7 +88,7 @@ const Navigation = ({ user }) => {
               bg-gray-900
               transition duration-200
             `}>
-                        <logout size={20} />
+                        <LogOut size={20} />
                         {isSidebarOpen && (
                             <span className="ml-3 text-sm">Logout</span>
                         )}
