@@ -4,8 +4,10 @@ import Link from "next/link";
 import { Menu, X, TicketsPlane } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from '../../hooks/auth';
 
 function Navbar() {
+  const { user } = useAuth({ middleware: 'guest' })
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
@@ -49,13 +51,28 @@ function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            {/* <button className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-primary">Sign In</button> */}
-            <button
-              onClick={handleNavigateRegister}
-              className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
-              Sign Up
-            </button>
-          </div>
+  {user ? (
+    <Link
+      href="/dashboard"
+      className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600">
+      Dashboard
+    </Link>
+  ) : (
+    <>
+      <Link
+        href="/login"
+        className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600">
+        Sign In
+      </Link>
+      <Link
+        href="/register"
+        className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
+        Sign Up
+      </Link>
+    </>
+  )}
+</div>
+
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-4 bg-[#4F959D] rounded-sm">

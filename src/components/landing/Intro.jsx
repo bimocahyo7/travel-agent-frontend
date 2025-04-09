@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BackgroundImage from "@/public/images/background.webp";
+import BackgroundImage from "../../../public/images/background.webp";
 
 function Intro() {
   return (
