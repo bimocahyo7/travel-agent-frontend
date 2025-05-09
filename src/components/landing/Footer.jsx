@@ -7,7 +7,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-4 pt-8 pb-5">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="inline-flex items-center">
               <p className="text-2xl font-bold text-[#205781] flex items-center">
                 Trip
                 <span className="text-[#f3bb66]">nesia</span>

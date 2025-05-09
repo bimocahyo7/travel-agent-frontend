@@ -13,13 +13,17 @@ function Navbar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleNavigateLogin = () => {
+    router.push("/login");
+  };
+
   const handleNavigateRegister = () => {
     router.push("/register");
   };
 
   return (
     <nav className="fixed w-full bg-[#EEF7FF] backdrop-blur-md border-b border-slate-300 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -43,16 +47,22 @@ function Navbar() {
             <Link href="/#about" className="text-gray-600 hover:text-primary">
               About Us
             </Link>
-            <Link href="/#contact" className="text-gray-600 hover:text-primary">
+            {/* <Link href="/#contact" className="text-gray-600 hover:text-primary">
               Contact
-            </Link>
+            </Link> */}
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            {/* <button className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-primary">Sign In</button> */}
             <button
+              type="button"
+              onClick={handleNavigateLogin}
+              className="px-4 py-2 text-base font-medium text-cyan-800 cursor-pointer">
+              Sign In
+            </button>
+            <button
+              type="button"
               onClick={handleNavigateRegister}
-              className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
+              className="px-4 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full cursor-pointer">
               Sign Up
             </button>
           </div>
@@ -90,14 +100,21 @@ function Navbar() {
                     className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
                     About Us
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/#contact"
                     className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
                     Contact
-                  </Link>
+                  </Link> */}
                 </div>
                 <div className="px-4 py-4">
                   <button
+                    type="button"
+                    onClick={handleNavigateLogin}
+                    className="w-full px-3 py-2 mb-3 text-base font-medium bg-white text-cyan-700 border-cyan-700 border-2 hover:bg-cyan-700/20 rounded-md">
+                    Sign In
+                  </button>
+                  <button
+                    type="button"
                     onClick={handleNavigateRegister}
                     className="w-full px-3 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-md">
                     Sign Up
