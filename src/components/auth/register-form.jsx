@@ -20,6 +20,8 @@ export function RegisterForm({ className, ...props }) {
   const { register } = useAuth({
     middleware: 'guest',
     redirectIfAuthenticated: user => {
+      // Kalau belum verif email, arahkan ke halaman verif
+      if (!user.email_verified_at) return '/verify-email'
       return user.role === 'admin' ? '/dashboard' : '/dashboard2'
     },
   })
