@@ -38,10 +38,16 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/#destinations" className="text-gray-600 hover:text-primary">
+            <Link
+              href="/#destinations"
+              className="text-gray-600 hover:text-primary"
+            >
               Destinations
             </Link>
-            <Link href="/#packages" className="text-gray-600 hover:text-primary">
+            <Link
+              href="/#packages"
+              className="text-gray-600 hover:text-primary"
+            >
               Packages
             </Link>
             <Link href="/#about" className="text-gray-600 hover:text-primary">
@@ -56,13 +62,15 @@ function Navbar() {
             <button
               type="button"
               onClick={handleNavigateLogin}
-              className="px-4 py-2 text-base font-medium text-cyan-800 cursor-pointer">
+              className="px-4 py-2 text-base font-medium text-cyan-800 cursor-pointer"
+            >
               Sign In
             </button>
             <button
               type="button"
               onClick={handleNavigateRegister}
-              className="px-4 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full cursor-pointer">
+              className="px-4 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full cursor-pointer"
+            >
               Sign Up
             </button>
           </div>
@@ -73,8 +81,13 @@ function Navbar() {
               onClick={toggleMenu}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
-              className="p-2 rounded-full">
-              {isMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              className="p-2 rounded-full"
+            >
+              {isMenuOpen ? (
+                <X className="w-5 h-5 text-white" />
+              ) : (
+                <Menu className="w-5 h-5 text-white" />
+              )}
             </button>
           </div>
         </div>
@@ -87,17 +100,20 @@ function Navbar() {
                 <div className="py-3">
                   <Link
                     href="/#destinations"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     Destinations
                   </Link>
                   <Link
                     href="/#packages"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     Packages
                   </Link>
                   <Link
                     href="/#about"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     About Us
                   </Link>
                   {/* <Link
@@ -110,13 +126,15 @@ function Navbar() {
                   <button
                     type="button"
                     onClick={handleNavigateLogin}
-                    className="w-full px-3 py-2 mb-3 text-base font-medium bg-white text-cyan-700 border-cyan-700 border-2 hover:bg-cyan-700/20 rounded-md">
+                    className="w-full px-3 py-2 mb-3 text-base font-medium bg-white text-cyan-700 border-cyan-700 border-2 hover:bg-cyan-700/20 rounded-md"
+                  >
                     Sign In
                   </button>
                   <button
                     type="button"
                     onClick={handleNavigateRegister}
-                    className="w-full px-3 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-md">
+                    className="w-full px-3 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-md"
+                  >
                     Sign Up
                   </button>
                 </div>

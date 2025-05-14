@@ -23,7 +23,11 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/tripnesia-logo.svg" sizes="any" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

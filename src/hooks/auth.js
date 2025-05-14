@@ -20,7 +20,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         // Jika email belum diverifikasi
         if (error.response.status !== 409) throw error;
         router.push("/verify-email");
-      })
+      }),
   );
 
   // Mendapatkan token CSRF dari Laravel Sanctum
@@ -86,7 +86,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     axios
       .post("/reset-password", { token: params.token, ...props })
       .then(
-        (response) => router.push("/login?reset=" + btoa(response.data.status)) // Encode status
+        (response) => router.push("/login?reset=" + btoa(response.data.status)), // Encode status
       )
       .catch((error) => {
         if (error.response.status !== 422) throw error;

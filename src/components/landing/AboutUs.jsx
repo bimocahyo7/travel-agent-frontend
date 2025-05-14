@@ -4,19 +4,24 @@ function AboutUs() {
   return (
     <section id="about" className="bg-[#95BFC4] scroll-mt-12">
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-12">
-        <h1 className="text-4xl font-bold text-left mb-12 text-[#27445D]">About Us</h1>
+        <h1 className="text-4xl font-bold text-left mb-12 text-[#27445D]">
+          About Us
+        </h1>
         <div className="flex flex-col md:flex-row gap-14 items-start">
           <div className="flex-1 space-y-8">
             {/* Profil */}
             <div>
               <p className="text-lg text-justify">
-                We are <strong>Tripnesia Travel</strong>, a professional travel agency committed to providing
-                exceptional travel experiences. With over 7+ years of expertise, we have assisted thousands of travelers
-                in their business trips, vacations, and various journey needs across Indonesia.
+                We are <strong>Tripnesia Travel</strong>, a professional travel
+                agency committed to providing exceptional travel experiences.
+                With over 7+ years of expertise, we have assisted thousands of
+                travelers in their business trips, vacations, and various
+                journey needs across Indonesia.
               </p>
               <p className="mt-4 text-lg text-justify">
-                Supported by a friendly and experienced team, we offer a variety of travel packages, transportation
-                services, and top-quality accommodations tailored to your needs.
+                Supported by a friendly and experienced team, we offer a variety
+                of travel packages, transportation services, and top-quality
+                accommodations tailored to your needs.
               </p>
             </div>
 
@@ -27,15 +32,24 @@ function AboutUs() {
               </h3>
               <ul className="space-y-2 text-lg font-medium text-gray-700">
                 <li className="flex items-center gap-3 hover:text-[#27445D] transition-colors">
-                  <MapPin className="w-6 h-6 text-rose-700 fill-rose-100" strokeWidth={2} />
+                  <MapPin
+                    className="w-6 h-6 text-rose-700 fill-rose-100"
+                    strokeWidth={2}
+                  />
                   Jl. Tugu, Kec. Klojen, Kota Malang, Jawa Timur 65111
                 </li>
                 <li className="flex items-center gap-3 hover:text-[#27445D] transition-colors">
-                  <Mail className="w-6 h-6 text-cyan-700 fill-cyan-100" strokeWidth={2} />
+                  <Mail
+                    className="w-6 h-6 text-cyan-700 fill-cyan-100"
+                    strokeWidth={2}
+                  />
                   info@tripnesia.com
                 </li>
                 <li className="flex items-center gap-3 hover:text-[#27445D] transition-colors">
-                  <Phone className="w-6 h-6 text-emerald-700 fill-emerald-100" strokeWidth={2} />
+                  <Phone
+                    className="w-6 h-6 text-emerald-700 fill-emerald-100"
+                    strokeWidth={2}
+                  />
                   +62 123 456 789
                 </li>
               </ul>
@@ -75,7 +89,9 @@ function AboutUs() {
               <h4 className="text-xl md:text-3xl font-bold text-white">4.9</h4>
               <Star className="w-5 h-5 md:w-6 md:h-6 text-yellow-500 fill-yellow-500" />
             </div>
-            <p className="mt-1 text-base md:text-lg text-white">Customer Rating</p>
+            <p className="mt-1 text-base md:text-lg text-white">
+              Customer Rating
+            </p>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ export function Card({ className, ...props }) {
     <div
       className={cn(
         "rounded-xl border bg-card text-card-foreground shadow",
-        className
+        className,
       )}
       {...props}
     />
@@ -15,14 +15,20 @@ export function Card({ className, ...props }) {
 
 export function CardHeader({ className, ...props }) {
   return (
-    <div className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+    <div
+      className={cn("flex flex-col space-y-1.5 p-6", className)}
+      {...props}
+    />
   );
 }
 
 export function CardTitle({ className, ...props }) {
   return (
     <h3
-      className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+      className={cn(
+        "text-2xl font-semibold leading-none tracking-tight",
+        className,
+      )}
       {...props}
     />
   );

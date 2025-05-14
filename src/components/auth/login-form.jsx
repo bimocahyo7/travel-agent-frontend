@@ -1,52 +1,52 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useAuth } from '@/hooks/auth'
-import AuthSessionStatus from '@/app/(auth)/AuthSessionStatus'
-import InputError from '@/components/ui/InputError'
-import Link from 'next/link'
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/auth";
+import AuthSessionStatus from "@/app/(auth)/AuthSessionStatus";
+import InputError from "@/components/ui/InputError";
+import Link from "next/link";
 
 export function LoginForm({ className, ...props }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const { login } = useAuth({
-    middleware: 'guest',
-    redirectIfAuthenticated: user => {
-      if (user.role === 'admin') return '/dashboard'
-      return '/dashboard2'
+    middleware: "guest",
+    redirectIfAuthenticated: (user) => {
+      if (user.role === "admin") return "/dashboard";
+      return "/dashboard2";
     },
-  })
+  });
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [shouldRemember, setShouldRemember] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [status, setStatus] = useState(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [shouldRemember, setShouldRemember] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
-    const reset = searchParams.get('reset')
+    const reset = searchParams.get("reset");
     if (reset && errors.length === 0) {
-      setStatus(atob(reset))
+      setStatus(atob(reset));
     } else {
-      setStatus(null)
+      setStatus(null);
     }
-  }, [searchParams, errors])
+  }, [searchParams, errors]);
 
-  const submitForm = async event => {
-    event.preventDefault()
+  const submitForm = async (event) => {
+    event.preventDefault();
 
     login({
       email,
@@ -54,11 +54,11 @@ export function LoginForm({ className, ...props }) {
       remember: shouldRemember,
       setErrors,
       setStatus,
-    })
-  }
+    });
+  };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -67,7 +67,10 @@ export function LoginForm({ className, ...props }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AuthSessionStatus className="mb-4 text-sm text-green-600" status={status} />
+          <AuthSessionStatus
+            className="mb-4 text-sm text-green-600"
+            status={status}
+          />
           <form onSubmit={submitForm} className="flex flex-col gap-6">
             {/* Email */}
             <div className="grid gap-2">
@@ -76,7 +79,7 @@ export function LoginForm({ className, ...props }) {
                 id="email"
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 autoFocus
               />
@@ -92,7 +95,7 @@ export function LoginForm({ className, ...props }) {
                 id="password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="current-password"
               />
@@ -117,12 +120,17 @@ export function LoginForm({ className, ...props }) {
               <Label htmlFor="remember_me">Remember me</Label>
             </div> */}
 
-            <Button type="submit" className="w-full" variant="outline" size="sm">
+            <Button
+              type="submit"
+              className="w-full"
+              variant="outline"
+              size="sm"
+            >
               Login
             </Button>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
