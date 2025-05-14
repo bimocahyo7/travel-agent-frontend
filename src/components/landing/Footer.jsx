@@ -14,7 +14,8 @@ function Footer() {
               </p>
             </Link>
             <p className="mt-4 text-gray-600">
-              Discover your next adventure with Tripnesia. Your trusted travel companion.
+              Discover your next adventure with Tripnesia. Your trusted travel
+              companion.
             </p>
             {/* Social Media */}
             <div className="flex space-x-4 mt-4">
@@ -23,7 +24,8 @@ function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our Instagram page"
-                className="text-gray-600 hover:text-primary">
+                className="text-gray-600 hover:text-primary"
+              >
                 <Instagram className="w-6 h-6" />
               </a>
               <a
@@ -31,7 +33,8 @@ function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our Facebook page"
-                className="text-gray-600 hover:text-primary">
+                className="text-gray-600 hover:text-primary"
+              >
                 <Facebook className="w-6 h-6" />
               </a>
               <a
@@ -39,7 +42,8 @@ function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Visit our Twitter page"
-                className="text-gray-600 hover:text-primary">
+                className="text-gray-600 hover:text-primary"
+              >
                 <Twitter className="w-6 h-6" />
               </a>
             </div>
@@ -51,13 +55,20 @@ function Footer() {
             <div className="flex flex-col space-y-2">
               <Link
                 href="/#destinations"
-                className="text-gray-600 hover:text-primary hover:underline inline-block w-fit">
+                className="text-gray-600 hover:text-primary hover:underline inline-block w-fit"
+              >
                 Destinations
               </Link>
-              <Link href="/#packages" className="text-gray-600 hover:text-primary hover:underline inline-block w-fit">
+              <Link
+                href="/#packages"
+                className="text-gray-600 hover:text-primary hover:underline inline-block w-fit"
+              >
                 Packages
               </Link>
-              <Link href="/#about" className="text-gray-600 hover:text-primary hover:underline inline-block w-fit">
+              <Link
+                href="/#about"
+                className="text-gray-600 hover:text-primary hover:underline inline-block w-fit"
+              >
                 About Us
               </Link>
             </div>

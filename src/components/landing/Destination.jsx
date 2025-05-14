@@ -20,11 +20,18 @@ function Destination() {
   ];
 
   return (
-    <section id="destinations" className="min-h-screen bg-[#F6F8D5] scroll-mt-12">
+    <section
+      id="destinations"
+      className="min-h-screen bg-[#F6F8D5] scroll-mt-12"
+    >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#2A4D50]">Popular Destinations</h1>
-          <p className="mt-2 text-lg text-gray-600">Explore the beauty of Indonesia</p>
+          <h1 className="text-4xl font-bold text-[#2A4D50]">
+            Popular Destinations
+          </h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Explore the beauty of Indonesia
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-6 justify-center">
@@ -32,7 +39,8 @@ function Destination() {
           {cityDestinations.map((destination, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300">
+              className="flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300"
+            >
               <div className="relative h-72 w-full overflow-hidden">
                 <Image
                   src={destination.image}
@@ -44,7 +52,9 @@ function Destination() {
               </div>
 
               <div className="absolute bottom-0 w-full p-4 text-white">
-                <h3 className="text-xl font-semibold mb-2">{destination.name}</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  {destination.name}
+                </h3>
                 <div className="flex items-center space-x-2 transition-opacity duration-300">
                   <button className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm group-hover:bg-white/30 transition-colors">
                     Explore More
