@@ -5,12 +5,13 @@ import Intro from "@/components/landing/Intro";
 import Navbar from "@/components/landing/Navbar";
 import Package from "@/components/landing/Package";
 import Footer from "@/components/landing/Footer";
-
+import Filter from "@/components/landing/filter";
 export default function Home() {
   return (
     <>
       <Navbar />
       <Intro />
+      <Filter />
       <Destination />
       <Package />
       <AboutUs />

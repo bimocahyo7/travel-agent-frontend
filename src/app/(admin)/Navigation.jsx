@@ -9,6 +9,7 @@ import {
   LogOut,
   TicketsPlane,
   Car,
+  CreditCard,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
@@ -25,6 +26,7 @@ const Navigation = ({ user }) => {
     { name: "User", href: "/user", icon: UserIcon },
     { name: "Destination", href: "/destination", icon: X },
     { name: "Vehicle", href: "/vehicle", icon: Car },
+    { name: "Payment", href: "/payment", icon: CreditCard },
     { name: "Settings", href: "/profile", icon: Settings },
   ];
 

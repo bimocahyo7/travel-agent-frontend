@@ -145,13 +145,13 @@ export default function VehiclePage() {
                 <thead>
                   <tr className="bg-gray-200">
                     <th className="border px-4 py-2">#</th>
-                    <th className="border px-4 py-2">Name</th>
-                    <th className="border px-4 py-2">Type</th>
-                    <th className="border px-4 py-2">Capacity</th>
-                    <th className="border px-4 py-2">License Plate</th>
+                    <th className="border px-4 py-2">Nama Kendaraan</th>
+                    <th className="border px-4 py-2">Jenis Kendaraan</th>
+                    <th className="border px-4 py-2">Kapasitas</th>
+                    <th className="border px-4 py-2">Plat Kendaraan</th>
                     <th className="border px-4 py-2">Status</th>
-                    <th className="border px-4 py-2">Description</th>
-                    <th className="border px-4 py-2">Actions</th>
+                    <th className="border px-4 py-2">Deskripsi</th>
+                    <th className="border px-4 py-2">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
