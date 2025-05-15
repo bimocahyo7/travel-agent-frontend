@@ -7,10 +7,10 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import RoleGuard from "@/components/auth/RoleGuard";
 
 export default function AdminLayout({ children }) {
-  const { user } = useAuth({ middleware: "auth" });
+  const { user, isLoading } = useAuth({ middleware: "auth" });
 
-  if (!user) {
-    return <p>Loading....</p>;
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -24,11 +24,7 @@ export default function AdminLayout({ children }) {
         <AppSidebar variant="inset" />
         <SidebarInset>
           <SiteHeader user={user} />
-          <div className="flex flex-1 flex-col">
-            <div className="@container/main flex flex-1 flex-col gap-2">
-              {children}
-            </div>
-          </div>
+          <div className="flex flex-1 flex-col">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </RoleGuard>

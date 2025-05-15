@@ -3,6 +3,7 @@
 import { IconCirclePlusFilled, IconMail } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -33,11 +34,13 @@ export function NavMain({ items }) {
           </SidebarMenuItem>
         </SidebarMenu> */}
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
+          {items.map((item, index) => (
+            <SidebarMenuItem key={index}>
+              <SidebarMenuButton asChild>
+                <Link href={item.url}>
+                  {item.icon && <item.icon className="mr-3" />}
+                  {item.title}
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

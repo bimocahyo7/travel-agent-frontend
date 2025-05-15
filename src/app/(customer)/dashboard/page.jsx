@@ -3,12 +3,10 @@
 import { PlaneTakeoff, CalendarDays, Plus } from "lucide-react";
 import Header from "@/app/(customer)/Header";
 import { useAuth } from "@/hooks/auth";
-import RoleGuard from "@/components/auth/RoleGuard";
 
 const Dashboard = () => {
   const { user } = useAuth();
   return (
-    <RoleGuard allowedRoles={["customer"]}>
       <div className="ml-64 p-6 space-y-6">
         <Header title="Dashboard Customer" />
         {/* <h1 className="text-2xl font-bold mb-6">Dashboard Customer</h1> */}
@@ -64,7 +62,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </RoleGuard>
   );
 };
 
