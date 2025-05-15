@@ -8,9 +8,12 @@ import {
   X,
   LogOut,
   TicketsPlane,
+  Car,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
+import { useRouter } from "next/navigation";
+
 
 const Navigation = ({ user }) => {
   const { logout } = useAuth();
@@ -21,6 +24,7 @@ const Navigation = ({ user }) => {
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "User", href: "/user", icon: UserIcon },
     { name: "Destination", href: "/destination", icon: X },
+    { name: "Vehicle", href: "/vehicle", icon: Car },
     { name: "Settings", href: "/profile", icon: Settings },
   ];
 
