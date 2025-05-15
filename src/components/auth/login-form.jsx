@@ -25,8 +25,8 @@ export function LoginForm({ className, ...props }) {
   const { login } = useAuth({
     middleware: "guest",
     redirectIfAuthenticated: (user) => {
-      if (user.role === "admin") return "/dashboard";
-      return "/dashboard2";
+      if (user.role === "admin") return "/admin/dashboard";
+      return "/dashboard";
     },
   });
 

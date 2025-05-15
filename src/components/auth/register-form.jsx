@@ -22,7 +22,7 @@ export function RegisterForm({ className, ...props }) {
     redirectIfAuthenticated: (user) => {
       // Kalau belum verif email, arahkan ke halaman verif
       if (!user.email_verified_at) return "/verify-email";
-      return user.role === "admin" ? "/dashboard" : "/dashboard2";
+      return user.role === "admin" ? "/admin/dashboard" : "/dashboard";
     },
   });
 
