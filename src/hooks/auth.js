@@ -178,3 +178,5 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     deleteUser,
   };
 };
+
+
