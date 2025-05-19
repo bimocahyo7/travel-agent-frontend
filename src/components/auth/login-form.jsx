@@ -128,6 +128,12 @@ export function LoginForm({ className, ...props }) {
             >
               Login
             </Button>
+            <Link
+                href="/register"
+                className="text-sm text-muted-foreground hover:underline"
+              >
+                Belum punya akun?
+              </Link>
           </form>
         </CardContent>
       </Card>

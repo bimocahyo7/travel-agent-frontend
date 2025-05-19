@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 
 export default function RoleGuard({ children, allowedRoles }) {
   const { user, isLoading } = useAuth({ middleware: "auth" });
@@ -20,8 +21,8 @@ export default function RoleGuard({ children, allowedRoles }) {
   }, [user, isLoading, allowedRoles, router]);
 
   // Tampilkan loading state atau null jika masih loading atau user tidak memiliki role yang diizinkan
-  if (isLoading || !user || !allowedRoles.includes(user.role)) {
-    return null; // Atau komponen loading
+  if (isLoading || !user) {
+    return <Loading />;
   }
 
   // Render children jika user memiliki role yang diizinkan
