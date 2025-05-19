@@ -28,8 +28,11 @@ export default function HotelForm() {
             className="w-full py-40 relative flex items-center justify-center"
         >
             <div className="space-y-4 bg-white p-6 rounded-xl shadow">
+                <h2 className="text-2xl font-bold mb-6 text-center text-cyan-700">
+                    Cari Hotel Penginapan
+                </h2>
                 <IconInput icon={<MapPin />} placeholder="Lokasi, Kota atau Tempat" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button variant="outline" className="w-full text-left">
@@ -62,7 +65,7 @@ export default function HotelForm() {
                             />
                         </PopoverContent>
                     </Popover>
-                </div>
+                </div> */}
 
                 <div className="space-y-4">
                     {/* Input fake untuk membuka modal */}

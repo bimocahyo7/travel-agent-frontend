@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import PackageForm from "@/components/layanan/PackageForm";
 import HotelForm from "@/components/layanan/HotelForm";
 import CarForm from "@/components/layanan/CarForm";
 import { Button } from "@/components/ui/button";
-import { Hotel, Car, Gift } from "lucide-react";
+import { Hotel, Car, Plane } from "lucide-react";
+import FlightForm from "@/components/layanan/FligthForm";
 
 export default function TabNavigation() {
-    const [activeTab, setActiveTab] = useState("packages");
+    const [activeTab, setActiveTab] = useState("flights");
 
     const renderTabContent = () => {
         switch (activeTab) {
-            case "packages":
-                return <PackageForm />;
+            case "flights":
+                return <FlightForm />;
             case "hotels":
                 return <HotelForm />;
             case "cars":
@@ -29,12 +29,12 @@ export default function TabNavigation() {
             {/* Tombol Tab: sekarang di atas */}
             <div className="bg-white border-b shadow-md p-3 flex justify-around sticky top-16 z-40">
                 <Button
-                    variant={activeTab === "packages" ? "default" : "ghost"}
-                    onClick={() => setActiveTab("packages")}
+                    variant={activeTab === "flights" ? "default" : "ghost"}
+                    onClick={() => setActiveTab("flights")}
                     className="flex flex-col items-center gap-1"
                 >
-                    <Gift size={20} />
-                    <span className="text-xs">Packages</span>
+                    <Plane size={20} />
+                    <span className="text-xs">Flights</span>
                 </Button>
                 <Button
                     variant={activeTab === "hotels" ? "default" : "ghost"}
