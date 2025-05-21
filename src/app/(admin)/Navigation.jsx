@@ -24,6 +24,7 @@ const Navigation = ({ user }) => {
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "User", href: "/user", icon: UserIcon },
+    { name: "Booking", href: "/booking", icon: TicketsPlane }, // Tambahkan ini
     { name: "Destination", href: "/destination", icon: X },
     { name: "Vehicle", href: "/vehicle", icon: Car },
     { name: "Payment", href: "/payment", icon: CreditCard },
