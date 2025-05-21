@@ -12,7 +12,7 @@ export const useBooking = () => {
   const { data: bookings, mutate } = useSWR("/api/bookings", () =>
     axios
       .get("/api/bookings")
-      .then((res) => res.data.bookings)
+      .then((res) => res.data) // Changed this line to directly return res.data
       .catch((error) => {
         if (error.response?.status === 401) {
           router.push("/login");
@@ -52,19 +52,8 @@ export const useBooking = () => {
   const updateBooking = async (id, data) => {
     try {
       setLoading(true);
-      const form = new FormData();
-      form.append("_method", "PUT");
-      form.append("user_id", data.user_id);
-      form.append("package_id", data.package_id);
-      form.append("vehicle_id", data.vehicle_id);
-      form.append("booking_date", data.booking_date);
-      form.append("jumlah_penumpang", data.jumlah_penumpang);
-      form.append("total_price", data.jumlah_penumpang);
-
-      await axios.post(`/api/bookings/${id}`, form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      mutate();
+      await axios.put(`/api/bookings/${id}`, data); // Changed from post to put, simplified data sending
+      await mutate(); // Make sure to await the mutate
       setSuccess("Booking berhasil diperbarui");
       return true;
     } catch (error) {
