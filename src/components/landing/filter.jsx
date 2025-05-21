@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useVehicle } from "@/hooks/vehicle";
 
 function RequestForm() {
   const [form, setForm] = useState({
@@ -14,6 +15,8 @@ function RequestForm() {
     participants: "",
     notes: "",
   });
+
+  const { vehicles, loading, error } = useVehicle();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -64,11 +67,9 @@ function RequestForm() {
                   required
                 >
                   <option value="" disabled>Pilih Kendaraan</option>
-                  <option value="Mobil">Mobil</option>
-                  <option value="Bus">Bus</option>
-                  <option value="Kereta">Kereta</option>
-                  <option value="Pesawat">Pesawat</option>
-                  <option value="Lainnya">Lainnya</option>
+                  {Array.isArray(vehicles) && vehicles.map((vehicle) => (
+                    <option key={vehicle.id} value={vehicle.id}>{vehicle.type}</option>
+                  ))}
                 </select>
               </div>
               <div className="flex gap-4">

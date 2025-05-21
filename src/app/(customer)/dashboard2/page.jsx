@@ -8,6 +8,7 @@ import Footer from "@/app/(customer)/landing/Footer";
 import Filter from "@/app/(customer)/landing/filter";
 import TabNavigation from "@/app/(customer)/landing/TabNavigation";
 import RoleGuard from "@/components/auth/RoleGuard";
+import Link from "next/link";
 
 export default function Dashboard() {
   return (
@@ -15,12 +16,13 @@ export default function Dashboard() {
       <Navbar />
       <Intro /> 
       <TabNavigation />
-      <Filter />
       <Destination />
+      <Filter />
       <Package />
       <AboutUs />
       {/* <Contact /> */}
       <Footer />
+      <Link href="/pengajuan" className="text-blue-600 underline">Kelola Pengajuan</Link>
     </RoleGuard>
   );
 }

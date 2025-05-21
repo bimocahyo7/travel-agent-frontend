@@ -10,6 +10,7 @@ import {
   TicketsPlane,
   Car,
   CreditCard,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
@@ -24,9 +25,10 @@ const Navigation = ({ user }) => {
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: Home },
     { name: "User", href: "/user", icon: UserIcon },
-    { name: "Booking", href: "/booking", icon: TicketsPlane }, // Tambahkan ini
     { name: "Destination", href: "/destination", icon: X },
     { name: "Vehicle", href: "/vehicle", icon: Car },
+    { name: "Booking", href: "/booking", icon: TicketsPlane },
+    { name: "Pengajuan", href: "/pengajuan", icon: FileText },
     { name: "Payment", href: "/payment", icon: CreditCard },
     { name: "Settings", href: "/profile", icon: Settings },
   ];
