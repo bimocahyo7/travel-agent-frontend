@@ -13,8 +13,8 @@ export default function Dashboard() {
   return (
     <RoleGuard allowedRoles={["customer"]}>
       <Navbar />
+      <Intro /> 
       <TabNavigation />
-      {/* <Intro /> */}
       <Filter />
       <Destination />
       <Package />
