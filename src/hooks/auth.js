@@ -75,7 +75,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
           if (!user.email_verified_at) {
             router.push("/verify-email");
           } else {
-            // Redirect based on role
+            // Redirect berdasar role
             if (user.role === "admin") {
               router.push("/admin/dashboard");
             } else {

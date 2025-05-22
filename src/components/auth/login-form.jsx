@@ -117,12 +117,7 @@ export function LoginForm({ className, ...props }) {
               <Label htmlFor="remember_me">Remember me</Label>
             </div> */}
 
-            <Button
-              type="submit"
-              className="w-full"
-              variant="outline"
-              size="sm"
-            >
+            <Button type="submit" className="w-full" size="sm">
               Login
             </Button>
           </form>

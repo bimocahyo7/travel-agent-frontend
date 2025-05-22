@@ -5,6 +5,7 @@ import { AppSidebar } from "@/components/admin/app-sidebar";
 import { SiteHeader } from "@/components/admin/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import RoleGuard from "@/components/auth/RoleGuard";
+import { Toaster } from "react-hot-toast";
 
 export default function AdminLayout({ children }) {
   const { user, isLoading } = useAuth({ middleware: "auth" });
@@ -25,6 +26,7 @@ export default function AdminLayout({ children }) {
         <SidebarInset>
           <SiteHeader user={user} />
           <div className="flex flex-1 flex-col">{children}</div>
+          <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
         </SidebarInset>
       </SidebarProvider>
     </RoleGuard>
