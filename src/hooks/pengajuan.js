@@ -128,8 +128,18 @@ export const useDestinations = () => {
     return res.data;
   });
 
-  // Pastikan destinations selalu array
-  const destinations = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+  // Debug: log data untuk memastikan strukturnya
+  // console.log("Destinations API response:", data);
+
+  // Handle berbagai kemungkinan struktur data
+  let destinations = [];
+  if (Array.isArray(data)) {
+    destinations = data;
+  } else if (Array.isArray(data?.data)) {
+    destinations = data.data;
+  } else if (Array.isArray(data?.destinations)) {
+    destinations = data.destinations;
+  }
 
   return {
     destinations,

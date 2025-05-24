@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/app/(admin)/Header";
 import { usePengajuan, useDestinations, useVehicles } from "@/hooks/pengajuan";
 import { useAuth } from "@/hooks/auth";
+import InvoiceModal from "@/components/pengajuan/InvoiceModal";
 
 export default function AdminPengajuanPage() {
   const {
@@ -13,6 +14,7 @@ export default function AdminPengajuanPage() {
     success,
     deletePengajuan,
     clearMessages,
+    updatePengajuan,
   } = usePengajuan();
 
   const { destinations = [] } = useDestinations() || {};
@@ -20,6 +22,36 @@ export default function AdminPengajuanPage() {
 
   const [users, setUsers] = useState([]);
   const { getUsers } = useAuth();
+
+  // Status options
+  const statusOptions = [
+    "menunggu_konfirmasi",
+    "menunggu_persetujuan",
+    "disetujui",
+    "dalam_perjalanan",
+    "menunggu_pembayaran",
+    "lunas",
+    "ditolak"
+  ];
+
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [selectedPengajuan, setSelectedPengajuan] = useState(null);
+  const [invoiceData, setInvoiceData] = useState({
+    amount: "",
+    due_date: "",
+    notes: ""
+  });
+
+  // Handler untuk update status
+  const handleStatusChange = async (pengajuan, newStatus) => {
+    if (pengajuan.status === newStatus) return;
+    if (newStatus === "menunggu_persetujuan") {
+      setSelectedPengajuan(pengajuan);
+      setShowInvoiceModal(true);
+    } else {
+      await updatePengajuan(pengajuan.id, { ...pengajuan, status: newStatus });
+    }
+  };
 
   const getDestinationName = (id) => {
     if (!Array.isArray(destinations)) return id;
@@ -102,6 +134,7 @@ export default function AdminPengajuanPage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pulang</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Peserta</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                     </tr>
                   </thead>
@@ -129,6 +162,17 @@ export default function AdminPengajuanPage() {
                           <td className="px-6 py-4 whitespace-nowrap">{pengajuan.participants}</td>
                           <td className="px-6 py-4 whitespace-nowrap">{pengajuan.notes || '-'}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
+                            <select
+                              className="border rounded px-2 py-1 text-sm"
+                              value={pengajuan.status || "Pending"}
+                              onChange={e => handleStatusChange(pengajuan, e.target.value)}
+                            >
+                              {statusOptions.map(opt => (
+                                <option key={opt} value={opt}>{opt}</option>
+                              ))}
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
                             <button
                               onClick={() => deletePengajuan(pengajuan.id)}
                               className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
@@ -146,6 +190,23 @@ export default function AdminPengajuanPage() {
           </div>
         </div>
       </div>
+
+      <InvoiceModal
+        open={showInvoiceModal}
+        onClose={() => setShowInvoiceModal(false)}
+        invoiceData={invoiceData}
+        setInvoiceData={setInvoiceData}
+        pengajuan={selectedPengajuan}
+        onSubmit={async () => {
+          await updatePengajuan(selectedPengajuan.id, {
+            ...selectedPengajuan,
+            status: "menunggu_persetujuan",
+            invoice: invoiceData
+          });
+          setShowInvoiceModal(false);
+          setInvoiceData({ amount: "", due_date: "", notes: "" });
+        }}
+      />
     </div>
   );
 }

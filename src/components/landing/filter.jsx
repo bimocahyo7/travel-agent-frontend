@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useVehicle } from "@/hooks/vehicle";
+import { usePengajuan } from "@/hooks/pengajuan";
+import { useAuth } from "@/hooks/auth";
+import { useDestinations } from "@/hooks/pengajuan";
 
 function RequestForm() {
   const [form, setForm] = useState({
@@ -17,15 +20,59 @@ function RequestForm() {
   });
 
   const { vehicles, loading, error } = useVehicle();
+  const { addPengajuan } = usePengajuan();
+  const { user } = useAuth();
+  const [success, setSuccess] = useState("");
+  const [errorSubmit, setError] = useState("");
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const { destinations, loading: loadingDestinations } = useDestinations();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: handle form submission (API call, etc)
-    console.log(form);
+    setSuccess("");
+    setError("");
+    setLoadingSubmit(true);
+    // Validasi user login
+    if (!user || !user.id) {
+      setError("Silakan login terlebih dahulu untuk mengajukan permintaan.");
+      setLoadingSubmit(false);
+      return;
+    }
+    // Map form field ke field backend
+    const pengajuanData = {
+      institution: form.institution,
+      applicant: form.applicant,
+      email: form.email,
+      destination_id: form.destination,
+      vehicle_id: form.vehicle,
+      departure_date: form.departureDate,
+      return_date: form.returnDate,
+      participants: form.participants,
+      notes: form.notes,
+      ...(user && user.id ? { user_id: user.id } : {}),
+    };
+    const result = await addPengajuan(pengajuanData);
+    if (result) {
+      setSuccess("Pengajuan berhasil dikirim!");
+      setForm({
+        institution: "",
+        applicant: "",
+        email: "",
+        destination: "",
+        vehicle: "",
+        departureDate: "",
+        returnDate: "",
+        participants: "",
+        notes: "",
+      });
+    } else {
+      setError("Gagal mengirim pengajuan. Silakan coba lagi.");
+    }
+    setLoadingSubmit(false);
   };
 
   return (
@@ -35,6 +82,8 @@ function RequestForm() {
           <h2 className="text-2xl font-bold text-[#205781] mb-6 text-center">
             Form Pengajuan Permintaan Perjalanan Dinas
           </h2>
+          {success && <div className="mb-4 p-2 bg-green-100 border border-green-400 text-green-700 rounded">{success}</div>}
+          {errorSubmit && <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">{errorSubmit}</div>}
           <form onSubmit={handleSubmit} className="md:flex gap-8 space-y-4 md:space-y-0">
             {/* Left Side */}
             <div className="flex-1 space-y-4">
@@ -52,7 +101,19 @@ function RequestForm() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tujuan Perjalanan</label>
-                <input type="text" name="destination" value={form.destination} onChange={handleChange} className="block w-full border border-gray-300 rounded-lg py-2 px-3" required />
+                <select
+                  name="destination"
+                  value={form.destination}
+                  onChange={handleChange}
+                  className="block w-full border border-gray-300 rounded-lg py-2 px-3"
+                  required
+                  disabled={loadingDestinations}
+                >
+                  <option value="" disabled>Pilih Tujuan</option>
+                  {Array.isArray(destinations) && destinations.map((dest) => (
+                    <option key={dest.id} value={dest.id}>{dest.location}</option>
+                  ))}
+                </select>
               </div>
             </div>
             {/* Right Side */}
@@ -90,7 +151,7 @@ function RequestForm() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Keterangan Tambahan</label>
                 <textarea name="notes" value={form.notes} onChange={handleChange} className="block w-full border border-gray-300 rounded-lg py-2 px-3" rows="3" />
               </div>
-              <button type="submit" className="w-full bg-[#F0A04B] hover:bg-amber-600 text-white py-2 px-4 rounded-lg font-semibold transition duration-300 mt-4">
+              <button type="submit" className={`w-full bg-[#F0A04B] hover:bg-amber-600 text-white py-2 px-4 rounded-lg font-semibold transition duration-300 mt-4${loadingSubmit ? " opacity-50 cursor-not-allowed" : ""}`} disabled={loadingSubmit}>
                 Ajukan Permintaan
               </button>
             </div>
