@@ -86,7 +86,11 @@ export default function Package() {
                   >
                     <div className="relative h-48 overflow-hidden">
                       <Image
-                        src={pkg.image || "/images/default.jpg"}
+                        src={
+                          pkg.image
+                            ? `http://localhost:8000/storage/images/${pkg.image}`
+                            : "/images/default.jpg"
+                        }
                         alt={pkg.name}
                         width={500}
                         height={300}
@@ -151,13 +155,26 @@ export default function Package() {
               ✕
             </button>
             <h2 className="text-2xl font-bold mb-2">{selectedPackage.name}</h2>
-            <Image
-              src={selectedPackage.image || "/images/default.jpg"}
-              alt={selectedPackage.name}
-              width={400}
-              height={250}
-              className="w-full h-48 object-cover rounded mb-4"
-            />
+            {selectedPackage.destination?.image ? (
+              <img
+                src={
+                  selectedPackage.destination.image_url ||
+                  `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/images/${selectedPackage.destination?.image}`
+                }
+                alt={selectedPackage.name}
+                className="w-full h-48 object-cover rounded mb-4"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "/images/default.jpg";
+                }}
+              />
+            ) : (
+              <img
+                src="/images/default.jpg"
+                alt="default"
+                className="w-full h-48 object-cover rounded mb-4"
+              />
+            )}
             <p className="mb-2"><strong>Destination:</strong> {selectedPackage.destination?.name || "N/A"}</p>
             <p className="mb-2"><strong>Location:</strong> {selectedPackage.destination?.location || "N/A"}</p>
             <p className="mb-2"><strong>Duration:</strong> {selectedPackage.duration}</p>
