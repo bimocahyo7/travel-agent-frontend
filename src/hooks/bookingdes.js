@@ -3,15 +3,15 @@ import axios from "@/lib/axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const useBooking = () => {
+export const useBookingdes = () => {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { data: bookings, mutate } = useSWR("/api/bookings", () =>
+  const { data: bookingdes, mutate } = useSWR("/api/bookingdes", () =>
     axios
-      .get("/api/bookings")
+      .get("/api/bookingdes")
       .then((res) => res.data) // Changed this line to directly return res.data
       .catch((error) => {
         if (error.response?.status === 401) {
@@ -21,21 +21,21 @@ export const useBooking = () => {
         setError("Failed to fetch bookings");
         console.error("Error fetching bookings:", error);
         return [];
-      })
+      }),
   );
 
-  const addBooking = async (data) => {
+  const addBookingdes = async (data) => {
     try {
       setLoading(true);
       const form = new FormData();
       form.append("user_id", data.user_id);
-      form.append("package_id", data.package_id);
+      form.append("destination_id", data.destination_id);
       form.append("vehicle_id", data.vehicle_id);
       form.append("booking_date", data.booking_date);
       form.append("jumlah_penumpang", data.jumlah_penumpang);
       form.append("total_price", data.total_price);
 
-      await axios.post("/api/bookings", form, {
+      await axios.post("/api/bookingdes", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       mutate();
@@ -49,10 +49,10 @@ export const useBooking = () => {
     }
   };
 
-  const updateBooking = async (id, data) => {
+  const updateBookingdes = async (id, data) => {
     try {
       setLoading(true);
-      await axios.put(`/api/bookings/${id}`, data); // Changed from post to put, simplified data sending
+      await axios.put(`/api/bookingdes/${id}`, data); // Changed from post to put, simplified data sending
       await mutate(); // Make sure to await the mutate
       setSuccess("Booking berhasil diperbarui");
       return true;
@@ -64,10 +64,10 @@ export const useBooking = () => {
     }
   };
 
-  const deleteBooking = async (id) => {
+  const deleteBookingdes = async (id) => {
     try {
       setLoading(true);
-      await axios.delete(`/api/bookings/${id}`);
+      await axios.delete(`/api/bookingdes/${id}`);
       mutate();
       setSuccess("Booking berhasil dihapus");
       return true;
@@ -85,13 +85,13 @@ export const useBooking = () => {
   };
 
   return {
-    bookings,
+    bookingdes,
     loading,
     error,
     success,
-    addBooking,
-    updateBooking,
-    deleteBooking,
+    addBookingdes,
+    updateBookingdes,
+    deleteBookingdes,
     clearMessages,
   };
 };

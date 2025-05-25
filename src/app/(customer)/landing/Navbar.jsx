@@ -93,7 +93,7 @@ function Navbar() {
                       </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="absolute right-0 z-50 mt-2 w-40 bg-white shadow-lg rounded-md">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => router.push("/pesanan-saya")}>
                         Pesanan Saya
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => setIsProfileModalOpen(true)}>

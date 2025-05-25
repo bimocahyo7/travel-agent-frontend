@@ -5,8 +5,10 @@ import { useVehicle } from "@/hooks/vehicle";
 import { usePengajuan } from "@/hooks/pengajuan";
 import { useAuth } from "@/hooks/auth";
 import { useDestinations } from "@/hooks/pengajuan";
+import { useRouter } from "next/navigation"; // Tambahkan ini
 
 function RequestForm() {
+  const router = useRouter(); // Tambahkan ini
   const [form, setForm] = useState({
     institution: "",
     applicant: "",
@@ -36,12 +38,15 @@ function RequestForm() {
     setSuccess("");
     setError("");
     setLoadingSubmit(true);
+
     // Validasi user login
     if (!user || !user.id) {
       setError("Silakan login terlebih dahulu untuk mengajukan permintaan.");
       setLoadingSubmit(false);
+      router.push('/login'); // Redirect ke halaman login
       return;
     }
+
     // Map form field ke field backend
     const pengajuanData = {
       institution: form.institution,
@@ -55,6 +60,7 @@ function RequestForm() {
       notes: form.notes,
       ...(user && user.id ? { user_id: user.id } : {}),
     };
+
     const result = await addPengajuan(pengajuanData);
     if (result) {
       setSuccess("Pengajuan berhasil dikirim!");

@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDestination } from '@/hooks/destination';
-import { useBooking } from '@/hooks/booking';
+import { useBookingdes } from '@/hooks/bookingdes';
 import { useVehicle } from '@/hooks/vehicle';
 import { useAuth } from '@/hooks/auth';
-import axios from '@/lib/axios';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -15,7 +14,7 @@ export default function BookingDestinationPage() {
     const { user } = useAuth();
     const { destinations } = useDestination();
     const { vehicles } = useVehicle();
-    const { addBooking, loading, success, error } = useBooking();
+    const { addBookingdes, loading, success, error } = useBookingdes();
 
     const [selectedDestination, setSelectedDestination] = useState(null);
     const [passengerCount, setPassengerCount] = useState(1);
@@ -37,8 +36,6 @@ export default function BookingDestinationPage() {
         if (dest) {
             setSelectedDestination(dest);
             setPassengerCount(count);
-
-            // Set default price jika destinasi memiliki price
             if (dest.price) {
                 setCustomPrice(dest.price.toString());
             }
@@ -47,15 +44,15 @@ export default function BookingDestinationPage() {
 
     const handleBooking = async (e) => {
         e.preventDefault();
-        if (!selectedDestination || !vehicleId || !bookingDate || !user || !customPrice) return;
+        if (!selectedDestination || !vehicleId || !bookingDate || !user) return;
 
-        const success = await addBooking({
+        const success = await addBookingdes({
             user_id: user.id,
             destination_id: selectedDestination.id,
             vehicle_id: vehicleId,
             booking_date: bookingDate,
             jumlah_penumpang: passengerCount,
-            total_price: parseFloat(customPrice) * passengerCount,
+            total_price: selectedDestination.price * passengerCount,
         });
 
         if (success) {
@@ -99,22 +96,6 @@ export default function BookingDestinationPage() {
                     {selectedDestination.description && (
                         <p><strong>Deskripsi:</strong> {selectedDestination.description}</p>
                     )}
-
-                    {/* Input harga custom untuk destinasi */}
-                    {/* <div className="mt-4">
-                        <label className="block text-sm mb-1">Harga per orang (Rp)</label>
-                        <Input
-                            type="number"
-                            min="0"
-                            value={customPrice}
-                            onChange={(e) => setCustomPrice(e.target.value)}
-                            placeholder="Masukkan harga per orang"
-                            required
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                            Harga dapat disesuaikan berdasarkan layanan yang diinginkan
-                        </p>
-                    </div> */}
                 </div>
 
                 <div>

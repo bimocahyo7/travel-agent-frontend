@@ -2,10 +2,10 @@
 
 import { useEffect } from "react";
 import Header from "@/app/(admin)/Header";
-import { useBooking } from "@/hooks/booking";
+import { useBookingdes } from "@/hooks/bookingdes";
 
 export default function AdminBookingPage() {
-  const { bookings, loading, error, success, updateBooking, clearMessages } = useBooking();
+  const { bookingdes, loading, error, success, updateBookingdes, clearMessages } = useBookingdes();
   const statusOptions = ["pending", "cancelled", "confirmed", "completed"];
 
 
@@ -21,7 +21,7 @@ export default function AdminBookingPage() {
   const handleStatusUpdate = async (booking, newStatus) => {
     const updatedData = {
       user_id: booking.user_id,
-      package_id: booking.package_id,
+      destination_id: booking.destination_id,
       vehicle_id: booking.vehicle_id,
       booking_date: booking.booking_date,
       jumlah_penumpang: booking.jumlah_penumpang,
@@ -29,7 +29,7 @@ export default function AdminBookingPage() {
       status: newStatus
     };
 
-    const success = await updateBooking(booking.id, updatedData);
+    const success = await updateBookingdes(booking.id, updatedData);
     if (success) {
       window.location.reload();
     }
@@ -73,7 +73,7 @@ export default function AdminBookingPage() {
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Package</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking Date</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passengers</th>
@@ -82,18 +82,18 @@ export default function AdminBookingPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {!bookings || bookings.length === 0 ? (
+                    {!bookingdes || bookingdes.length === 0 ? (
                       <tr>
                         <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
                           No booking data available.
                         </td>
                       </tr>
                     ) : (
-                      bookings.map((booking, idx) => (
+                      bookingdes.map((booking, idx) => (
                         <tr key={booking.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{idx + 1}</td>
                           <td className="px-6 py-4 whitespace-nowrap">{booking.user?.name || "Unknown User"}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">{booking.package?.name || "Unknown Package"}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">{booking.destination?.name || "Unknown Destination"}</td>
                           <td className="px-6 py-4 whitespace-nowrap">{booking.vehicle ? `${booking.vehicle.name} (${booking.vehicle.type})` : "Unknown Vehicle"}</td>
                           <td className="px-6 py-4 whitespace-nowrap">{new Date(booking.booking_date).toLocaleDateString()}</td>
                           <td className="px-6 py-4 whitespace-nowrap">{booking.jumlah_penumpang}</td>

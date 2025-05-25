@@ -28,6 +28,7 @@ const Navigation = ({ user }) => {
     { name: "Destination", href: "/destination", icon: X },
     { name: "Vehicle", href: "/vehicle", icon: Car },
     { name: "Booking", href: "/booking", icon: TicketsPlane },
+    { name: "Booking Destination", href: "/bookingdes", icon: TicketsPlane },
     { name: "Pengajuan", href: "/pengajuan", icon: FileText },
     { name: "Payment", href: "/payment", icon: CreditCard },
     { name: "Settings", href: "/profile", icon: Settings },
