@@ -16,6 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDestinations } from "@/hooks/useDestinations";
 import { SquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
+import { z } from "zod";
+import { Label } from "@/components/ui/label";
 
 export default function AddDestinationDialog() {
   const { createDestination } = useDestinations();
@@ -29,9 +31,19 @@ export default function AddDestinationDialog() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState({});
+
+  const destinationSchema = z.object({
+    name: z.string().min(3, "Nama destinasi minimal 3 karakter"),
+    location: z.string().min(3, "Lokasi minimal 3 karakter"),
+    description: z.string().min(3, "Deskripsi minimal 3 karakter"),
+    price: z.number().min(1, "Masukkan harga valid"),
+    image: z.instanceof(File, { message: "Gambar wajib diupload" }),
+  });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError((prev) => ({ ...prev, [e.target.name]: undefined }));
   };
 
   const handleImageChange = (e) => {
@@ -42,9 +54,39 @@ export default function AddDestinationDialog() {
     }
   };
 
+  const resetForm = () => {
+    setForm({
+      name: "",
+      location: "",
+      description: "",
+      price: "",
+      image: null,
+    });
+    setPreview(null);
+    setError({});
+    setLoading(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const result = destinationSchema.safeParse({
+      ...form,
+      price: Number(form.price),
+    });
+
+    if (!result.success) {
+      const fieldErrors = {};
+      result.error.errors.forEach((err) => {
+        fieldErrors[err.path[0]] = err.message;
+      });
+      setError(fieldErrors);
+      setLoading(false);
+      return;
+    }
+
+    setError({});
 
     try {
       const formData = new FormData();
@@ -59,14 +101,7 @@ export default function AddDestinationDialog() {
 
       await createDestination(formData);
 
-      setForm({
-        name: "",
-        location: "",
-        description: "",
-        price: "",
-        image: null,
-      });
-      setPreview(null);
+      resetForm();
       setOpen(false);
       toast.success("Destinasi berhasil ditambahkan");
     } catch (err) {
@@ -79,68 +114,122 @@ export default function AddDestinationDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        // Reset saat modal ditutup
+        if (!isOpen) resetForm();
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="bg-teal-200 cursor-pointer" variant="primary">
           <SquarePlus /> Add Destination
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="min-w-2xl w-full">
         <DialogHeader>
           <DialogTitle>Add Destination</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <Input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Name"
-            required
-          />
-          <Input
-            name="location"
-            value={form.location}
-            onChange={handleChange}
-            placeholder="Location"
-            required
-          />
-          <Textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            placeholder="Description"
-            required
-          />
-          <Input
-            name="price"
-            type="number"
-            value={form.price}
-            onChange={handleChange}
-            placeholder="Price"
-            required
-          />
-          <div>
-            <label className="block mb-1 text-sm font-medium">Image</label>
-            <Input
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-            {preview && (
-              <img
-                src={preview}
-                alt="Preview"
-                className="mt-2 w-32 h-20 object-cover rounded"
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Enter destination name"
+                required
               />
-            )}
+              <div className="min-h-[10px]">
+                {error.name && (
+                  <p className="text-rose-400 text-sm">{error.name}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Location</Label>
+              <Input
+                name="location"
+                value={form.location}
+                onChange={handleChange}
+                placeholder="Enter location name"
+                required
+              />
+              <div className="min-h-[10px]">
+                {error.location && (
+                  <p className="text-rose-400 text-sm">{error.location}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Price</Label>
+              <Input
+                name="price"
+                type="number"
+                value={form.price}
+                onChange={handleChange}
+                placeholder="Enter price"
+                min={0}
+                required
+              />
+              <div className="min-h-[10px]">
+                {error.price && (
+                  <p className="text-rose-400 text-sm">{error.price}</p>
+                )}
+              </div>
+            </div>
           </div>
-          <DialogFooter>
+
+          <div className="flex flex-col gap-3">
+            <Label>Description</Label>
+            <Textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Enter description destination"
+              required
+              className="h-32"
+            />
+            <div className="min-h-[6px]">
+              {error.description && (
+                <p className="text-rose-400 text-sm">{error.description}</p>
+              )}
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium">Image</label>
+              <Input
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <div className="min-h-[10px] mt-2">
+                {error.image && (
+                  <p className="text-rose-400 text-sm">{error.image}</p>
+                )}
+              </div>
+              {preview && (
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="mt-2 w-32 h-20 object-cover rounded"
+                />
+              )}
+            </div>
+          </div>
+          {/* Footer full width */}
+          <div className="md:col-span-2 flex justify-end gap-2 mt-2">
             <DialogClose asChild>
               <Button
                 type="button"
                 variant="secondary"
                 className="cursor-pointer"
+                onClick={resetForm}
               >
                 Cancel
               </Button>
@@ -148,7 +237,7 @@ export default function AddDestinationDialog() {
             <Button type="submit" disabled={loading} className="cursor-pointer">
               {loading ? "Saving..." : "Save"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

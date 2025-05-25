@@ -64,9 +64,10 @@ export const columns = [
       const price = parseFloat(row.getValue("price"));
       return (
         <span className="flex justify-center">
-          {new Intl.NumberFormat("en-US", {
+          {new Intl.NumberFormat("id-ID", {
             style: "currency",
-            currency: "USD",
+            currency: "IDR",
+            minimumFractionDigits: 0,
           }).format(price)}
         </span>
       );
