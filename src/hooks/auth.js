@@ -55,7 +55,20 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     axios
       .post("/register", props)
-      .then(() => mutate()) // Update data user setelah berhasil
+      .then(() => {
+        mutate().then((user) => {
+          if (!user.email_verified_at) {
+            router.push("/verify-email");
+          } else {
+            // Redirect berdasar role jika sudah verif
+            if (user.role === "admin") {
+              router.push("/admin/dashboard");
+            } else {
+              router.push("/dashboard");
+            }
+          }
+        });
+      })
       .catch((error) => {
         if (error.response.status !== 422) throw error;
         setErrors(error.response.data.errors); // Set error validasi
@@ -174,3 +187,5 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     deleteUser,
   };
 };
+
+

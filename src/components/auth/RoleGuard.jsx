@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 
 const RoleGuard = ({ children, allowedRoles }) => {
   const { user, error } = useAuth();

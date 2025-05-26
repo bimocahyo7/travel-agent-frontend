@@ -25,7 +25,7 @@ export default function Package() {
   const handleOrderNow = (packageId) => {
     if (packageId) {
       localStorage.setItem("selectedPackageId", packageId);
-      router.push("/login");
+      router.push("/booking-package");
     }
   };
 
@@ -155,6 +155,7 @@ export default function Package() {
               ✕
             </button>
             <h2 className="text-2xl font-bold mb-2">{selectedPackage.name}</h2>
+
             {selectedPackage.destination?.image ? (
               <img
                 src={

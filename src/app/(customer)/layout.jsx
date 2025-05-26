@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/auth";
-import Navigation from "@/app/(customer)/Navigation";
+// import Navigation from "@/app/(customer)/Navigation";
 import Loading from "@/app/(customer)/Loading";
 import RoleGuard from "@/components/auth/RoleGuard";
 import { useRouter } from "next/navigation";
@@ -22,12 +22,12 @@ const CustomerLayout = ({ children }) => {
   }
 
   return (
-    <RoleGuard allowedRoles={["customer"]}>
+    // <RoleGuard allowedRoles={["customer"]}>
       <div className="min-h-screen flex bg-gray-100">
-        <Navigation user={user} />
+        <div user={user} />
         <main className="flex-1 p-4">{children}</main>
       </div>
-    </RoleGuard>
+    // </RoleGuard>
   );
 };
 
