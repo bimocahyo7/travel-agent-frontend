@@ -75,10 +75,15 @@ const data = {
       url: "/admin/transaction",
       icon: BookText,
     },
+      {
+        title: "Review",
+        url: "/admin/review",
+        icon: Star,
+      },
     {
-      title: "Review",
-      url: "/admin/review",
-      icon: Star,
+      title: "Pengajuan",
+      url: "/admin/pengajuan",
+      icon: IconFileDescription,
     },
   ],
 };
