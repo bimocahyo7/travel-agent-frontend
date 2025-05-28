@@ -63,7 +63,7 @@ export const columns = [
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price"));
       return (
-        <span className="flex justify-center">
+        <span className="flex justify-items-start">
           {new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
@@ -76,13 +76,32 @@ export const columns = [
   {
     accessorKey: "image",
     header: "Image",
-    cell: ({ row }) => (
-      <img
-        src={row.getValue("image")}
-        alt={row.getValue("name")}
-        className="w-16 h-12 object-cover rounded"
-      />
-    ),
+    cell: ({ row }) => {
+      const image = row.getValue("image");
+
+      const imageUrl = image
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`
+        : null;
+
+      if (!imageUrl) {
+        return (
+          <div className="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+            No image
+          </div>
+        );
+      }
+
+      return (
+        <div className="w-16 h-12 relative">
+          <img
+            src={imageUrl}
+            alt={row.getValue("name") || "Package image"}
+            className="w-full h-full object-cover rounded shadow"
+            loading="lazy"
+          />
+        </div>
+      );
+    },
   },
   {
     id: "actions",
