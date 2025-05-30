@@ -29,6 +29,9 @@ import { columns } from "./columns";
 import { useState } from "react";
 import { useVehicle } from "@/hooks/vehicle";
 import InvoiceModal from "../InvoiceModal";
+import BarcodeSendModal from "../BarcodeSendModal";
+import PaymentModal from "../PaymentModal";
+import DetailPengajuanModal from "../DetailPengajuanModal";
 
 export function DataTable({ data, isLoading }) {
   const [sorting, setSorting] = useState([]);
@@ -41,15 +44,42 @@ export function DataTable({ data, isLoading }) {
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
 
+  // Tambahkan state untuk modal barcode
+  const [barcodeModalOpen, setBarcodeModalOpen] = useState(false);
+  const [selectedPengajuanId, setSelectedPengajuanId] = useState(null);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  // State for detail modal
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedPengajuanDetail, setSelectedPengajuanDetail] = useState(null);
+
   // Handler untuk show invoice
   const handleShowInvoice = (rowData) => {
     setSelectedInvoiceData(rowData);
     setInvoiceModalOpen(true);
   };
 
+  const handleShowBarcodeModal = (pengajuanId) => {
+    setSelectedPengajuanId(pengajuanId);
+    setBarcodeModalOpen(true);
+  };
+
+  const handleShowPaymentModal = (pengajuanId) => {
+    setSelectedPengajuanId(pengajuanId);
+    setPaymentModalOpen(true);
+  };
+
+  // Handler for detail modal
+  const handleShowDetailModal = (rowData) => {
+    // Find the vehicle type
+    const vehicle = vehicles?.find((v) => v.id === rowData.vehicle_id);
+    setSelectedPengajuanDetail({ ...rowData, vehicle_type: vehicle ? vehicle.type : rowData.vehicle_id });
+    setDetailModalOpen(true);
+  };
+
   const table = useReactTable({
     data,
-    columns: columns({ vehicles, onShowInvoice: handleShowInvoice }),
+    columns: columns({ vehicles, onShowInvoice: handleShowInvoice, onShowBarcode: handleShowBarcodeModal }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -150,6 +180,19 @@ export function DataTable({ data, isLoading }) {
                         )}
                       </TableCell>
                     ))}
+                    {/* Button for detail modal */}
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => handleShowDetailModal(row.original)}>
+                        Detail
+                      </Button>
+                    </TableCell>
+                    {row.original.status === "menunggu_pembayaran" && (
+                      <TableCell>
+                        {/* <Button onClick={() => handleShowPaymentModal(row.original.id)}>
+                          Pembayaran
+                        </Button> */}
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               ) : (
@@ -194,6 +237,21 @@ export function DataTable({ data, isLoading }) {
         open={invoiceModalOpen}
         onClose={() => setInvoiceModalOpen(false)}
         invoiceData={selectedInvoiceData}
+      />
+      <BarcodeSendModal
+        open={barcodeModalOpen}
+        onClose={() => setBarcodeModalOpen(false)}
+        pengajuanId={selectedPengajuanId}
+      />
+      <PaymentModal
+        open={paymentModalOpen}
+        onClose={() => setPaymentModalOpen(false)}
+        pengajuanId={selectedPengajuanId}
+      />
+      <DetailPengajuanModal
+        open={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        pengajuanData={selectedPengajuanDetail}
       />
     </div>
   );

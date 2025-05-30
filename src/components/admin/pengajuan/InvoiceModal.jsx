@@ -28,13 +28,15 @@ export default function InvoiceModal({ open, onClose, invoiceData }) {
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
 
+  // Cek apakah invoice sudah pernah dikirim
+  const invoiceSent = !!(invoiceData?.sent_date || invoiceData?.invoice_number);
+
   const handleSendInvoice = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSuccess("");
     setError("");
     try {
-      // Ganti endpoint sesuai backend Anda
       await axios.post("/api/invoices", {
         pengajuan_id: invoiceData?.id,
         total: totalHarga,
@@ -76,11 +78,15 @@ export default function InvoiceModal({ open, onClose, invoiceData }) {
                 onChange={(e) => setTotalHarga(e.target.value)}
                 required
                 min={0}
+                disabled={invoiceSent}
               />
             </div>
+            {invoiceSent && (
+              <div className="text-blue-600 text-sm font-semibold">Invoice sudah pernah dikirim dan tidak dapat dikirim ulang.</div>
+            )}
             {success && <div className="text-green-600 text-sm">{success}</div>}
             {error && <div className="text-red-600 text-sm">{error}</div>}
-            <Button type="submit" disabled={loading || !totalHarga}>
+            <Button type="submit" disabled={loading || !totalHarga || invoiceSent}>
               {loading ? "Mengirim..." : "Kirim Invoice ke Customer"}
             </Button>
           </form>
@@ -100,7 +106,7 @@ export default function InvoiceModal({ open, onClose, invoiceData }) {
                       setShowConfirm(false);
                       await handleSendInvoice(new Event("submit", { cancelable: true }));
                     }}
-                    disabled={loading}
+                    disabled={loading || invoiceSent}
                   >
                     Ya, Kirim Invoice
                   </Button>

@@ -97,6 +97,14 @@ export const usePengajuan = () => {
     setSuccess("");
   };
 
+  const handleApprove = async (pengajuan) => {
+    const nextStatus = getNextStatus(pengajuan.status);
+    if (!nextStatus) return;
+    setLoadingId(pengajuan.id);
+    await updatePengajuan(pengajuan.id, { status: nextStatus });
+    setLoadingId(null);
+  };
+
   return {
     pengajuans,
     loading: loading || isLoading,
@@ -106,6 +114,7 @@ export const usePengajuan = () => {
     updatePengajuan,
     deletePengajuan,
     clearMessages,
+    handleApprove,
   };
 };
 
