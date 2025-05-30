@@ -7,8 +7,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogClose,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -127,7 +127,12 @@ export default function AddDestinationDialog() {
           <SquarePlus /> Add Destination
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-2xl w-full">
+      <DialogContent
+        className="min-w-2xl w-full"
+        onPointerDownOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Add Destination</DialogTitle>
         </DialogHeader>
@@ -223,7 +228,7 @@ export default function AddDestinationDialog() {
             </div>
           </div>
           {/* Footer full width */}
-          <div className="md:col-span-2 flex justify-end gap-2 mt-2">
+          <DialogFooter className="md:col-span-2 flex justify-end gap-2 mt-2">
             <DialogClose asChild>
               <Button
                 type="button"
@@ -237,7 +242,7 @@ export default function AddDestinationDialog() {
             <Button type="submit" disabled={loading} className="cursor-pointer">
               {loading ? "Saving..." : "Save"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
