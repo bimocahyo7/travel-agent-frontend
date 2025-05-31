@@ -1,97 +1,98 @@
-import useSWR from "swr";
-import axios from "@/lib/axios";
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "@/lib/axios";
 
-export const useBooking = () => {
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+export function useBooking() {
+  const queryClient = useQueryClient();
+  const [error, setError] = useState(null);
 
-  const { data: bookings, mutate } = useSWR("/api/bookings", () =>
-    axios
-      .get("/api/bookings")
-      .then((res) => res.data) // Changed this line to directly return res.data
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          router.push("/login");
-          return [];
-        }
-        setError("Failed to fetch bookings");
-        console.error("Error fetching bookings:", error);
-        return [];
-      })
-  );
+  // Get all bookings
+  const { data: bookings, isLoading: loading, error: fetchError } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: async () => {
+      try {
+        const response = await axios.get("/api/bookings");
+        console.log("API Response:", response.data); // Debug log
+        return response.data.data;
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setError(error.response?.data?.message || "Failed to fetch bookings");
+        throw error;
+      }
+    },
+    retry: 1,
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-  const addBooking = async (data) => {
+  // Create new booking mutation
+  const { mutate: createBooking, isLoading: creating } = useMutation({
+    mutationFn: async (bookingData) => {
+      const response = await axios.post("/api/bookings", bookingData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (error) => {
+      setError(error.response?.data?.message || "Failed to create booking");
+      throw error;
+    },
+  });
+
+  // Update booking status mutation
+  const { mutate: updateBookingStatus, isLoading: updating } = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const response = await axios.put(`/api/bookings/${id}`, { status });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (error) => {
+      setError(error.response?.data?.message || "Failed to update status");
+      throw error;
+    },
+  });
+
+  // Delete booking mutation
+  const { mutate: deleteBooking, isLoading: deleting } = useMutation({
+    mutationFn: async (id) => {
+      const response = await axios.delete(`/api/bookings/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    },
+    onError: (error) => {
+      setError(error.response?.data?.message || "Failed to delete booking");
+      throw error;
+    },
+  });
+
+  // Get single booking
+  const getBooking = async (id) => {
     try {
-      setLoading(true);
-      const form = new FormData();
-      form.append("user_id", data.user_id);
-      form.append("package_id", data.package_id);
-      form.append("vehicle_id", data.vehicle_id);
-      form.append("booking_date", data.booking_date);
-      form.append("jumlah_penumpang", data.jumlah_penumpang);
-      form.append("total_price", data.total_price);
-
-      await axios.post("/api/bookings", form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      mutate();
-      setSuccess("Booking berhasil ditambahkan");
-      return true;
+      const response = await axios.get(`/api/bookings/${id}`);
+      return response.data.data;
     } catch (error) {
-      setError(error.response?.data?.message || "Gagal menambahkan booking");
-      return false;
-    } finally {
-      setLoading(false);
+      setError(error.response?.data?.message || "Failed to fetch booking");
+      throw error;
     }
-  };
-
-  const updateBooking = async (id, data) => {
-    try {
-      setLoading(true);
-      await axios.put(`/api/bookings/${id}`, data); // Changed from post to put, simplified data sending
-      await mutate(); // Make sure to await the mutate
-      setSuccess("Booking berhasil diperbarui");
-      return true;
-    } catch (error) {
-      setError(error.response?.data?.message || "Gagal memperbarui booking");
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteBooking = async (id) => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/bookings/${id}`);
-      mutate();
-      setSuccess("Booking berhasil dihapus");
-      return true;
-    } catch (error) {
-      setError(error.response?.data?.message || "Gagal menghapus booking");
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const clearMessages = () => {
-    setError("");
-    setSuccess("");
   };
 
   return {
     bookings,
     loading,
-    error,
-    success,
-    addBooking,
-    updateBooking,
-    deleteBooking,
-    clearMessages,
+    creating,
+    updating,
+    deleting,
+    error: error || fetchError?.message,
+    createBooking: (data) => createBooking(data),
+    updateBookingStatus: (id, status) => updateBookingStatus({ id, status }),
+    deleteBooking: (id) => deleteBooking(id),
+    getBooking,
   };
-};
+}
