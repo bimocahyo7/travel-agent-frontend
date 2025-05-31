@@ -113,6 +113,10 @@ export const columns = [
 				</Button>
 			);
 		},
+		cell: ({ row }) => {
+			const value = parseInt(row.getValue("jumlah_penumpang"));
+			return <div className="font-medium">{value}</div>;
+		},
 	},
 	{
 		accessorKey: "total_price",
