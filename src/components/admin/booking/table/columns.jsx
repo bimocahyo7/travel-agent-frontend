@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpDown } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import EditBookingStatusDialog from "../EditBookingStatusDialog";
+import Link from "next/link";
 
 export const columns = [
 	{
@@ -174,7 +175,17 @@ export const columns = [
 		id: "actions",
 		header: "Actions",
 		cell: ({ row }) => {
-			return <EditBookingStatusDialog booking={row.original} />;
+			return (
+				<div className="flex gap-2 items-center">
+					<EditBookingStatusDialog booking={row.original} />
+					<Link
+						href={`/admin/booking/${row.original.id}`}
+						className="inline-block bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded"
+					>
+						Detail
+					</Link>
+				</div>
+			);
 		},
 	},
 ];

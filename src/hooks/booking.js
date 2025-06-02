@@ -14,7 +14,23 @@ export function useBooking() {
     queryFn: async () => {
       try {
         const response = await axios.get("/api/bookings");
-        console.log("API Response:", response.data); // Debug log
+        console.log("Raw API Response:", response);
+        
+        // Validasi struktur data
+        const bookings = response.data.data;
+        if (Array.isArray(bookings)) {
+          bookings.forEach((booking, index) => {
+            console.log(`Booking ${index} structure:`, {
+              hasPackage: !!booking.package,
+              hasPackageId: !!booking.package_id,
+              hasPayment: !!booking.payment,
+              hasVehicle: !!booking.vehicle,
+              hasUser: !!booking.user,
+              fullBooking: booking
+            });
+          });
+        }
+        
         return response.data.data;
       } catch (error) {
         console.error("Fetch error:", error);
@@ -75,8 +91,39 @@ export function useBooking() {
   // Get single booking
   const getBooking = async (id) => {
     try {
-      const response = await axios.get(`/api/bookings/${id}`);
-      return response.data.data;
+      // Tambahkan include agar relasi ikut di-fetch
+      const response = await axios.get(`/api/bookings/${id}?include=payment,user,package,vehicle,transaction`);
+      console.log("Single booking data:", response.data.data);
+      // Validasi struktur data booking tunggal
+      const booking = response.data.data;
+      console.log("Booking structure validation:", {
+        hasPackage: !!booking.package,
+        packageDetails: booking.package ? {
+          id: booking.package.id,
+          name: booking.package.name
+        } : null,
+        hasPayment: !!booking.payment,
+        paymentDetails: booking.payment ? {
+          method: booking.payment.payment_method,
+          status: booking.payment.status
+        } : null,
+        hasVehicle: !!booking.vehicle,
+        vehicleDetails: booking.vehicle ? {
+          name: booking.vehicle.name
+        } : null,
+        hasUser: !!booking.user,
+        userDetails: booking.user ? {
+          name: booking.user.name,
+          email: booking.user.email
+        } : null,
+        hasTransaction: !!booking.transaction,
+        transactionDetails: booking.transaction ? {
+          kode_transaksi: booking.transaction.kode_transaksi,
+          tanggal: booking.transaction.tanggal,
+          jumlah: booking.transaction.jumlah
+        } : null
+      });
+      return booking;
     } catch (error) {
       setError(error.response?.data?.message || "Failed to fetch booking");
       throw error;
