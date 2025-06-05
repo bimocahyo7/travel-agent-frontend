@@ -1,16 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, FileText, CreditCard } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
+import { CheckCircle2, FileText } from "lucide-react";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
+import PaymentSection from "./PaymentSection";
 
 export default function InvoiceCustomer({
   invoice,
@@ -199,110 +192,19 @@ export default function InvoiceCustomer({
         <Button
           onClick={handleClick}
           disabled={!isButtonActive}
-          className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow transition-all duration-200 text-base font-semibold ${isButtonActive ? "bg-green-600 hover:bg-green-700 text-white" : "bg-gray-400 text-white cursor-not-allowed"}`}
+          className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow transition-all duration-200 text-base font-semibold ${
+            isButtonActive
+              ? "bg-green-600 hover:bg-green-700 text-white"
+              : "bg-gray-400 text-white cursor-not-allowed"
+          }`}
         >
           <CheckCircle2 className="w-5 h-5" />
           {!isButtonActive ? "Setuju & Lanjutkan" : "Setuju & Lanjutkan"}
         </Button>
-        {/* Tombol Bayar muncul jika status menunggu_pembayaran */}
+
+        {/* Render PaymentSection jika status menunggu_pembayaran */}
         {pengajuan.status === "menunggu_pembayaran" && (
-          <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
-            <Button
-              onClick={() => setShowPaymentModal(true)}
-              disabled={paymentSubmitted}
-              className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow text-base font-semibold ${
-                paymentSubmitted
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
-            >
-              <CreditCard className="w-5 h-5" />
-              {paymentSubmitted ? "Pembayaran Terkirim" : "Bayar"}
-            </Button>
-
-            {/* Tampilkan pesan verifikasi jika sudah submit */}
-            {paymentSubmitted && (
-              <div className="mt-2 text-sm text-yellow-600 bg-yellow-50 p-2 rounded-md flex items-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                Menunggu verifikasi pembayaran oleh admin
-              </div>
-            )}
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Pembayaran</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col items-center gap-3">
-                <CreditCard className="w-10 h-10 text-blue-600" />
-                <p className="text-gray-700 mb-4 text-center">
-                  Silakan lakukan pembayaran untuk melanjutkan proses.
-                </p>
-                {/* Dropdown untuk memilih metode pembayaran */}
-                <div className="w-full mb-4">
-                  <label className="block font-semibold mb-1">
-                    Metode Pembayaran
-                  </label>
-                  <select
-                    value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    {paymentMethods.map((method) => (
-                      <option key={method.value} value={method.value}>
-                        {method.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {/* Upload bukti pembayaran */}
-                <div className="mt-3">
-                  <label className="block font-semibold mb-1">
-                    Upload Bukti Pembayaran
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleFileChange}
-                    className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                  />
-                  {paymentProof && (
-                    <div className="text-xs text-green-700 mt-1">
-                      File: {paymentProof.name}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  onClick={handleUpload}
-                  disabled={uploading || !paymentProof || paymentSubmitted}
-                  className={`w-full ${
-                    paymentSubmitted
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700"
-                  } text-white font-semibold`}
-                >
-                  {uploading
-                    ? "Uploading..."
-                    : paymentSubmitted
-                      ? "Pembayaran Terkirim"
-                      : "Bayar Sekarang"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <PaymentSection pengajuan={pengajuan} invoice={invoice} />
         )}
       </div>
     </div>
