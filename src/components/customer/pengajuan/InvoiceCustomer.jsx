@@ -9,24 +9,39 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import axios from "@/lib/axios";
+import { toast } from "react-hot-toast";
 
-export default function InvoiceCustomer({ invoice, pengajuan, onNextStep, disabled }) {
+export default function InvoiceCustomer({
+  invoice,
+  pengajuan,
+  onNextStep,
+  disabled,
+}) {
   if (!invoice) return null;
+
+  const [clicked, setClicked] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentProof, setPaymentProof] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("transfer_bank");
+  // Tambahkan state untuk tracking status pembayaran
+  const [paymentSubmitted, setPaymentSubmitted] = useState(false);
+
+  const paymentMethods = [
+    { value: "transfer_bank", label: "Transfer Bank" },
+    { value: "cash", label: "Cash" },
+    { value: "credit_card", label: "Credit Card" },
+    { value: "debit_card", label: "Debit Card" },
+    { value: "e_wallet", label: "E-Wallet" },
+  ];
 
   // Contoh logika: button disable jika invoice.total kurang dari 1
   const isButtonDisabled = !invoice.total || invoice.total < 1;
 
-  // State untuk handle disable setelah klik
-  const [clicked, setClicked] = useState(false);
-
-  // State untuk modal pembayaran
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
-
-  // State untuk file bukti pembayaran
-  const [paymentProof, setPaymentProof] = useState(null);
-
   // Button aktif jika status menunggu_persetujuan
-  const isButtonActive = pengajuan.status === "menunggu_persetujuan" && !clicked;
+  const isButtonActive =
+    pengajuan.status === "menunggu_persetujuan" && !clicked;
 
   // Handler klik button
   const handleClick = () => {
@@ -49,49 +64,132 @@ export default function InvoiceCustomer({ invoice, pengajuan, onNextStep, disabl
     setPaymentProof(e.target.files[0]);
   };
 
+  // Handler untuk upload bukti pembayaran
+  const handleUpload = async () => {
+    if (!paymentProof) {
+      toast.error("Silakan pilih file untuk diupload.");
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("pengajuan_id", pengajuan.id);
+    formData.append("amount_paid", invoice.total);
+    formData.append("method", paymentMethod);
+    formData.append("path_file", paymentProof);
+
+    try {
+      await axios.post("/api/paymentsub", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Bukti pembayaran berhasil diupload!");
+      setPaymentSubmitted(true);
+      setShowPaymentModal(false);
+    } catch (error) {
+      toast.error("Gagal upload bukti pembayaran.");
+      console.error("Upload error:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-2xl p-6 max-w-lg mx-right animate-fade-in">
+    <div className="bg-white rounded-xl shadow-2xl p-6 max-w-2xl mx-auto animate-fade-in">
       {/* Header dengan ikon */}
-      <div className="flex items-center gap-3 mb-4 border-b pb-2">
-        <FileText className="text-green-600 w-7 h-7" />
+      <div className="flex items-center gap-3 mb-6 border-b pb-4">
+        <FileText className="text-green-600 w-8 h-8" />
         <span className="font-extrabold text-2xl text-gray-800">Invoice</span>
       </div>
-      {/* Info Pengajuan */}
+
+      {/* Info Pengajuan dengan Card Design */}
       {pengajuan && (
-        <div className="mb-4 text-sm text-gray-700 grid grid-cols-2 gap-x-4 gap-y-1">
-          <div><b>ID Pengajuan:</b> <span className="text-gray-900">{pengajuan.id}</span></div>
-          <div><b>Instansi:</b> <span className="text-gray-900">{pengajuan.institution}</span></div>
-          <div><b>Pemohon:</b> <span className="text-gray-900">{pengajuan.applicant}</span></div>
-          <div><b>Tujuan:</b> <span className="text-gray-900">{pengajuan.destination}</span></div>
-          <div><b>Tanggal Berangkat:</b> <span className="text-gray-900">{pengajuan.departure_date}</span></div>
-          <div><b>Tanggal Kembali:</b> <span className="text-gray-900">{pengajuan.return_date}</span></div>
-          <div className="col-span-2"><b>Peserta:</b> <span className="text-gray-900">{pengajuan.participants}</span></div>
+        <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 className="font-semibold text-gray-700 mb-3 text-lg">
+            Informasi Pengajuan
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InfoItem label="ID Pengajuan" value={pengajuan.id} />
+            <InfoItem label="Instansi" value={pengajuan.institution} />
+            <InfoItem label="Pemohon" value={pengajuan.applicant} />
+            <InfoItem label="Tujuan" value={pengajuan.destination} />
+            <InfoItem
+              label="Tanggal Berangkat"
+              value={new Date(pengajuan.departure_date).toLocaleDateString(
+                "id-ID",
+                {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
+            />
+            <InfoItem
+              label="Tanggal Kembali"
+              value={new Date(pengajuan.return_date).toLocaleDateString(
+                "id-ID",
+                {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
+            />
+            <div className="md:col-span-2">
+              <InfoItem label="Peserta" value={pengajuan.participants} />
+            </div>
+          </div>
         </div>
       )}
-      {/* Divider */}
-      <div className="border-b mb-3" />
-      <div className="mb-2 text-xs text-gray-500 flex items-center gap-2">
-        <span>Invoice dikirim:</span> <span className="font-semibold text-gray-700">{invoice.sent_date}</span>
+
+      {/* Tanggal Invoice */}
+      <div className="mb-4 p-3 bg-green-50 rounded-lg text-sm text-green-700 flex items-center gap-2">
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+          />
+        </svg>
+        <span>Invoice dikirim: </span>
+        <span className="font-semibold">{invoice.sent_date}</span>
       </div>
+
       {/* Tabel Invoice */}
       <div className="overflow-x-auto">
         <table className="w-full mb-4 border rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-green-50">
-              <th className="text-left px-3 py-2 font-semibold text-green-700">Item</th>
-              <th className="text-right px-3 py-2 font-semibold text-green-700">Harga</th>
+              <th className="text-left px-3 py-2 font-semibold text-green-700">
+                Item
+              </th>
+              <th className="text-right px-3 py-2 font-semibold text-green-700">
+                Harga
+              </th>
             </tr>
           </thead>
           <tbody>
-            {invoice.items && invoice.items.map((item, idx) => (
-              <tr key={idx} className="hover:bg-green-50 transition">
-                <td className="px-3 py-2">{item.name}</td>
-                <td className="text-right px-3 py-2">Rp {item.price.toLocaleString("id-ID")}</td>
-              </tr>
-            ))}
+            {invoice.items &&
+              invoice.items.map((item, idx) => (
+                <tr key={idx} className="hover:bg-green-50 transition">
+                  <td className="px-3 py-2">{item.name}</td>
+                  <td className="text-right px-3 py-2">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </td>
+                </tr>
+              ))}
             <tr className="font-bold bg-green-100 text-green-800 text-lg">
               <td className="px-3 py-2">Total</td>
-              <td className="text-right px-3 py-2">Rp {invoice.total?.toLocaleString("id-ID")}</td>
+              <td className="text-right px-3 py-2">
+                Rp {invoice.total?.toLocaleString("id-ID")}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -110,47 +208,98 @@ export default function InvoiceCustomer({ invoice, pengajuan, onNextStep, disabl
         {pengajuan.status === "menunggu_pembayaran" && (
           <Dialog open={showPaymentModal} onOpenChange={setShowPaymentModal}>
             <Button
-              onClick={handlePayClick}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg shadow bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold"
+              onClick={() => setShowPaymentModal(true)}
+              disabled={paymentSubmitted}
+              className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow text-base font-semibold ${
+                paymentSubmitted
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
             >
               <CreditCard className="w-5 h-5" />
-              Bayar
+              {paymentSubmitted ? "Pembayaran Terkirim" : "Bayar"}
             </Button>
+
+            {/* Tampilkan pesan verifikasi jika sudah submit */}
+            {paymentSubmitted && (
+              <div className="mt-2 text-sm text-yellow-600 bg-yellow-50 p-2 rounded-md flex items-center">
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                Menunggu verifikasi pembayaran oleh admin
+              </div>
+            )}
+
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Pembayaran</DialogTitle>
               </DialogHeader>
               <div className="flex flex-col items-center gap-3">
                 <CreditCard className="w-10 h-10 text-blue-600" />
-                <p className="text-gray-700 mb-4 text-center">Silakan lakukan pembayaran untuk melanjutkan proses.</p>
-                {/* Placeholder form/informasi pembayaran */}
+                <p className="text-gray-700 mb-4 text-center">
+                  Silakan lakukan pembayaran untuk melanjutkan proses.
+                </p>
+                {/* Dropdown untuk memilih metode pembayaran */}
                 <div className="w-full mb-4">
-                  <div className="flex justify-between mb-2">
-                    <span className="font-semibold">Total Tagihan:</span>
-                    <span className="font-bold text-green-700">Rp {invoice.total?.toLocaleString("id-ID")}</span>
-                  </div>
+                  <label className="block font-semibold mb-1">
+                    Metode Pembayaran
+                  </label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  >
+                    {paymentMethods.map((method) => (
+                      <option key={method.value} value={method.value}>
+                        {method.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {/* Upload bukti pembayaran */}
+                <div className="mt-3">
+                  <label className="block font-semibold mb-1">
+                    Upload Bukti Pembayaran
+                  </label>
                   <input
-                    type="text"
-                    placeholder="Masukkan nomor rekening / metode pembayaran"
-                    className="w-full border rounded px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    type="file"
+                    accept="image/*,application/pdf"
+                    onChange={handleFileChange}
+                    className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   />
-                  {/* Upload bukti pembayaran */}
-                  <div className="mt-3">
-                    <label className="block font-semibold mb-1">Upload Bukti Pembayaran</label>
-                    <input
-                      type="file"
-                      accept="image/*,application/pdf"
-                      onChange={handleFileChange}
-                      className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    {paymentProof && (
-                      <div className="text-xs text-green-700 mt-1">File: {paymentProof.name}</div>
-                    )}
-                  </div>
+                  {paymentProof && (
+                    <div className="text-xs text-green-700 mt-1">
+                      File: {paymentProof.name}
+                    </div>
+                  )}
                 </div>
               </div>
               <DialogFooter>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold">Bayar Sekarang</Button>
+                <Button
+                  onClick={handleUpload}
+                  disabled={uploading || !paymentProof || paymentSubmitted}
+                  className={`w-full ${
+                    paymentSubmitted
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700"
+                  } text-white font-semibold`}
+                >
+                  {uploading
+                    ? "Uploading..."
+                    : paymentSubmitted
+                      ? "Pembayaran Terkirim"
+                      : "Bayar Sekarang"}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -159,3 +308,11 @@ export default function InvoiceCustomer({ invoice, pengajuan, onNextStep, disabl
     </div>
   );
 }
+
+// Komponen untuk Item Informasi
+const InfoItem = ({ label, value }) => (
+  <div className="flex flex-col space-y-1">
+    <span className="text-sm font-medium text-gray-500">{label}</span>
+    <span className="text-base text-gray-900 font-semibold">{value}</span>
+  </div>
+);
