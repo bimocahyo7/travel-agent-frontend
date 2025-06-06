@@ -76,7 +76,7 @@ const data = {
       icon: IconChartBar,
     },
     {
-      title: "Transaction",
+      title: "History",
       url: "/admin/transaction",
       icon: BookText,
     },
