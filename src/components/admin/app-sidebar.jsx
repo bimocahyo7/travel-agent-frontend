@@ -51,6 +51,11 @@ const data = {
       icon: Map,
     },
     {
+      title: "Booking Destination",
+      url: "/admin/bookingdes",
+      icon: Map,
+    },
+    {
       title: "Vehicle",
       url: "/admin/vehicle",
       icon: Car,
@@ -75,11 +80,11 @@ const data = {
       url: "/admin/transaction",
       icon: BookText,
     },
-      {
-        title: "Review",
-        url: "/admin/review",
-        icon: Star,
-      },
+    {
+      title: "Review",
+      url: "/admin/review",
+      icon: Star,
+    },
     {
       title: "Pengajuan",
       url: "/admin/pengajuan",
