@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Star } from "lucide-react";
 import DeleteReviewDialog from "@/components/admin/review/DeleteReviewDialog";
-import ViewReviewDialog from "../ViewReviewDialog";
+import ViewReviewDialog from "@/components/admin/review/ViewReviewDialog";
 
 export const columns = [
   {
