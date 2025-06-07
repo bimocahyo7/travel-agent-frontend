@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Star } from "lucide-react";
 import DeleteReviewDialog from "@/components/admin/review/DeleteReviewDialog";
+import ViewReviewDialog from "../ViewReviewDialog";
 
 export const columns = [
   {
@@ -81,7 +82,7 @@ export const columns = [
 
       return (
         <div className="flex justify-center">
-          <div className="inline-flex justify-center gap-1 px-3 py-1 rounded-full bg-amber-200">
+          <div className="inline-flex justify-center items-center gap-1 px-3 py-1 rounded-full bg-amber-200">
             <span className="text-sm font-medium text-amber-900">{rating}</span>
             <Star className="h-4 w-4 text-amber-600 fill-amber-600" />
           </div>
@@ -108,6 +109,7 @@ export const columns = [
 
       return (
         <div className="flex gap-2">
+          <ViewReviewDialog review={rowData} />
           <DeleteReviewDialog review={rowData} />
         </div>
       );
