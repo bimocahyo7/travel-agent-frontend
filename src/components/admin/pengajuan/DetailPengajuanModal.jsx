@@ -44,7 +44,7 @@ export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
           <div><b>Catatan:</b> {pengajuanData?.notes}</div>
           <div><b>Status:</b> {statusLabel(pengajuanData?.status)}</div>
           {/* Tampilkan gambar bukti pembayaran jika tersedia */}
-          <div>
+          {/* <div>
             <b>Bukti Pembayaran:</b>
             {pengajuanData?.payment_proof ? (
               <div className="mt-2">
@@ -57,7 +57,7 @@ export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
             ) : (
               <span className="text-gray-500">Tidak ada bukti pembayaran.</span>
             )}
-          </div>
+          </div> */}
         </div>
         <DialogFooter>
           <Button variant="secondary" onClick={() => alert("Export PDF belum diimplementasikan")}>

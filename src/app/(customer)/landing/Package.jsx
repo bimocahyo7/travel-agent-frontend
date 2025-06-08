@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { usePackages } from "@/hooks/package";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -85,17 +84,23 @@ export default function Package() {
                     className="relative bg-white rounded-xl shadow-2xs hover:shadow-xl transition-all duration-300 overflow-hidden group"
                   >
                     <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={
-                          pkg.image
-                            ? `http://localhost:8000/storage/images/${pkg.image}`
-                            : "/images/default.jpg"
-                        }
-                        alt={pkg.name}
-                        width={500}
-                        height={300}
-                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-                      />
+                      {pkg.image ? (
+                        <img
+                          src={pkg.image_url || `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/images/${pkg.image}`}
+                          alt={pkg.name}
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "/images/default.jpg";
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src="/images/default.jpg"
+                          alt="default"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     </div>
 

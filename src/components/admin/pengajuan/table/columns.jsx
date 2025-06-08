@@ -10,7 +10,7 @@ import InvoiceModal from "../InvoiceModal";
 // import EditPengajuanDialog from "@/components/admin/pengajuan/EditPengajuanDialog";
 // import DeletePengajuanAlert from "@/components/admin/pengajuan/DeletePengajuanAlert";
 
-export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode }) => [
+export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode, onShowPaymentReceived }) => [
   {
     accessorKey: "id",
     header: "ID",
@@ -104,26 +104,27 @@ export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode }) => [
           if (value === "menunggu_pembayaran" && onShowBarcode) {
             onShowBarcode(id);
           }
+          if (value === "lunas" && onShowPaymentReceived) {
+            onShowPaymentReceived(row.original.id);
+          }
         } else {
           toast.error("Gagal update status");
         }
       };
 
       return (
-        <>
-          <Select value={localStatus} onValueChange={handleStatusChange}>
-            <SelectTrigger className="capitalize w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value} className="capitalize">
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </>
+        <Select value={localStatus} onValueChange={handleStatusChange}>
+          <SelectTrigger className="capitalize w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {statusOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value} className="capitalize">
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       );
     },
   },
