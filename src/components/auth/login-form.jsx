@@ -24,10 +24,7 @@ export function LoginForm({ className, ...props }) {
 
   const { login } = useAuth({
     middleware: "guest",
-    redirectIfAuthenticated: (user) => {
-      if (user.role === "admin") return "/dashboard";
-      return "/dashboard2";
-    },
+    redirectIfAuthenticated: "/dashboard",
   });
 
   const [email, setEmail] = useState("");
@@ -120,14 +117,15 @@ export function LoginForm({ className, ...props }) {
               <Label htmlFor="remember_me">Remember me</Label>
             </div> */}
 
-            <Button
-              type="submit"
-              className="w-full"
-              variant="outline"
-              size="sm"
-            >
+            <Button type="submit" className="w-full" size="sm">
               Login
             </Button>
+            <Link
+                href="/register"
+                className="text-sm text-muted-foreground hover:underline"
+              >
+                Belum punya akun?
+              </Link>
           </form>
         </CardContent>
       </Card>

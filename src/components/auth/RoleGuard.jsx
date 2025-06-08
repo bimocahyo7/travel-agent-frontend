@@ -1,29 +1,38 @@
 "use client";
-// components/RoleGuard.js
+
 import { useAuth } from "@/hooks/auth";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 
-export default function RoleGuard({ children, allowedRoles }) {
-  const { user, isLoading } = useAuth({ middleware: "auth" });
+const RoleGuard = ({ children, allowedRoles }) => {
+  const { user, error } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && user) {
-      if (!allowedRoles.includes(user.role)) {
-        // Redirect ke halaman default berdasarkan role user
-        const redirectPath =
-          user.role === "admin" ? "/dashboard" : "/dashboard2";
-        router.push(redirectPath);
+    if (error) {
+      router.push("/login");
+      return;
+    }
+
+    if (user && !allowedRoles.includes(user.role)) {
+      if (user.role === "customer") {
+        router.push("/dashboard");
+      } else if (user.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/login");
       }
     }
-  }, [user, isLoading, allowedRoles, router]);
+  }, [user, error, allowedRoles]);
 
-  // Tampilkan loading state atau null jika masih loading atau user tidak memiliki role yang diizinkan
-  if (isLoading || !user || !allowedRoles.includes(user.role)) {
-    return null; // Atau komponen loading
+  // Render nothing while checking auth
+  if (!user || error) {
+    return null;
   }
 
-  // Render children jika user memiliki role yang diizinkan
-  return <>{children}</>;
-}
+  // Only render if user has correct role
+  return allowedRoles.includes(user.role) ? children : null;
+};
+
+export default RoleGuard;

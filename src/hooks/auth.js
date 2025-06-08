@@ -1,13 +1,11 @@
 import useSWR from "swr";
 import axios from "@/lib/axios";
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
   const router = useRouter();
-  const params = useParams();
 
-  // Ambil data user dari endpoint /api/user menggunakan SWR
   const {
     data: user,
     error,
@@ -17,11 +15,35 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
       .get("/api/user")
       .then((res) => res.data)
       .catch((error) => {
-        // Jika email belum diverifikasi
-        if (error.response.status !== 409) throw error;
-        router.push("/verify-email");
+        if (error.response?.status !== 409) {
+          throw error;
+        }
       }),
   );
+
+  useEffect(() => {
+    // Handle auth middleware
+    if (middleware === "auth") {
+      if (error) {
+        router.push("/login");
+        return;
+      }
+
+      if (user && !user.email_verified_at) {
+        router.push("/verify-email");
+        return;
+      }
+    }
+
+    // Handle guest middleware
+    if (middleware === "guest" && user) {
+      if (user.role === "admin") {
+        router.push("/admin/dashboard");
+      } else if (user.role === "customer") {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, error, middleware]);
 
   // Mendapatkan token CSRF dari Laravel Sanctum
   const csrf = () => axios.get("/sanctum/csrf-cookie");
@@ -33,7 +55,20 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     axios
       .post("/register", props)
-      .then(() => mutate()) // Update data user setelah berhasil
+      .then(() => {
+        mutate().then((user) => {
+          if (!user.email_verified_at) {
+            router.push("/verify-email");
+          } else {
+            // Redirect berdasar role jika sudah verif
+            if (user.role === "admin") {
+              router.push("/admin/dashboard");
+            } else {
+              router.push("/dashboard");
+            }
+          }
+        });
+      })
       .catch((error) => {
         if (error.response.status !== 422) throw error;
         setErrors(error.response.data.errors); // Set error validasi
@@ -52,10 +87,16 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         mutate().then((user) => {
           if (!user.email_verified_at) {
             router.push("/verify-email");
+          } else {
+            // Redirect berdasar role
+            if (user.role === "admin") {
+              router.push("/admin/dashboard");
+            } else {
+              router.push("/dashboard");
+            }
           }
         });
       })
-
       .catch((error) => {
         if (error.response.status !== 422) throw error;
         setErrors(error.response.data.errors);
@@ -131,41 +172,9 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     await axios.delete(`/api/users/${id}`);
   };
 
-  // Middleware handler (guest/auth)
-  useEffect(() => {
-    // Jika guest dan sudah login, redirect
-    if (middleware === "guest" && redirectIfAuthenticated && user) {
-      const redirectPath =
-        typeof redirectIfAuthenticated === "function"
-          ? redirectIfAuthenticated(user)
-          : redirectIfAuthenticated;
-
-      router.push(redirectPath);
-    }
-
-    // Jika auth tapi email belum diverifikasi
-    if (middleware === "auth" && user && !user.email_verified_at)
-      router.push("/verify-email");
-
-    // Jika di halaman verifikasi dan sudah diverifikasi, redirect
-    if (
-      window.location.pathname === "/verify-email" &&
-      user?.email_verified_at
-    ) {
-      const redirectPath =
-        typeof redirectIfAuthenticated === "function"
-          ? redirectIfAuthenticated(user)
-          : redirectIfAuthenticated;
-
-      router.push(redirectPath);
-    }
-
-    // Jika auth dan terjadi error (seperti tidak login), maka logout
-    if (middleware === "auth" && error) logout();
-  }, [user, error]);
-
   return {
     user,
+    error,
     register,
     login,
     forgotPassword,
@@ -178,3 +187,5 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     deleteUser,
   };
 };
+
+
