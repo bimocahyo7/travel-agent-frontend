@@ -52,7 +52,7 @@ const data = {
       icon: Map,
       children: [
         { title: "Data Destinasi", url: "/admin/destination" },
-        { title: "Booking", url: "/admin/destination/booking" },
+        { title: "Booking", url: "/admin/bookingdes" },
         { title: "Payment", url: "/admin/destination/payment" },
       ],
     },
@@ -71,7 +71,7 @@ const data = {
       children: [
         { title: "Pengajuan", url: "/admin/pengajuan" },
         { title: "Invoice", url: "/admin/pengajuan/invoice" },
-        { title: "Payment", url: "/admin/pengajuan/payment" },
+        { title: "Payment", url: "/admin/pengajuan/paymentsub" },
       ],
     },
     {

@@ -8,6 +8,7 @@ import { useVehicle } from '@/hooks/vehicle';
 import { useAuth } from '@/hooks/auth';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PaymentModal from '@/components/PaymentModal';
 
 export default function BookingDestinationPage() {
     const router = useRouter();
@@ -22,6 +23,8 @@ export default function BookingDestinationPage() {
     const [vehicleId, setVehicleId] = useState("");
     const [customPrice, setCustomPrice] = useState("");
     const [message, setMessage] = useState("");
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [bookingData, setBookingData] = useState(null);
 
     useEffect(() => {
         const destinationId = localStorage.getItem("selectedDestinationId");
@@ -46,22 +49,37 @@ export default function BookingDestinationPage() {
         e.preventDefault();
         if (!selectedDestination || !vehicleId || !bookingDate || !user) return;
 
-        const success = await addBookingdes({
+        const selectedVehicle = vehicles.find(v => v.id == vehicleId);
+        const total = getTotalPrice();
+        const bookingDetails = {
+            customerName: user.name,
+            destination: selectedDestination.name,
+            date: bookingDate,
+            passengers: passengerCount,
+            total: total,
+            vehicle: {
+                name: selectedVehicle.name,
+                type: selectedVehicle.type
+            }
+        };
+
+        setBookingData(bookingDetails);
+        setShowPaymentModal(true);
+    };
+
+    const handleConfirmBooking = async (bookingDetails) => {
+        const bookingData = {
             user_id: user.id,
             destination_id: selectedDestination.id,
             vehicle_id: vehicleId,
             booking_date: bookingDate,
-            jumlah_penumpang: passengerCount,
-            total_price: selectedDestination.price * passengerCount,
-        });
+            jumlah_penumpang: parseInt(passengerCount),
+            total_price: getTotalPrice(),
+        };
 
+        const success = await addBookingdes(bookingData);
         if (success) {
-            localStorage.removeItem("selectedDestinationId");
-            localStorage.removeItem("passengerCount");
-            setMessage("Booking berhasil!");
-            router.push("/dashboard");
-        } else {
-            setMessage("Booking gagal.");
+            router.push("/my-bookings"); // Redirect ke halaman booking list
         }
     };
 
@@ -154,6 +172,15 @@ export default function BookingDestinationPage() {
                 {message && <p className="text-center text-sm text-blue-600">{message}</p>}
                 {error && <p className="text-center text-sm text-red-600">{error}</p>}
             </form>
+
+            {showPaymentModal && (
+                <PaymentModal 
+                    isOpen={showPaymentModal}
+                    onClose={() => setShowPaymentModal(false)}
+                    bookingDetails={bookingData}
+                    onConfirm={handleConfirmBooking}
+                />
+            )}
         </section>
     );
 }
