@@ -1,23 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useBookingdes } from "@/hooks/bookingdes";
+import { useBooking } from "@/hooks/booking";
 
 export default function BookingPackagePage() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const itemsPerPage = 5;
 
-    const { bookingdes, loading } = useBookingdes();
+    const { bookings, loading } = useBooking();
 
     // Filter dan pagination
-    const filteredBookingdes = (bookingdes || []).filter(
+    const filteredBookings = (bookings || []).filter(
         (booking) =>
             booking.package?.name?.toLowerCase().includes(search.toLowerCase()) ||
             booking.status?.toLowerCase().includes(search.toLowerCase())
     );
-    const totalPages = Math.ceil(filteredBookingdes.length / itemsPerPage);
-    const paginatedBookingdes = filteredBookingdes.slice(
+    const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+    const paginatedBookings = filteredBookings.slice(
         (page - 1) * itemsPerPage,
         page * itemsPerPage
     );
@@ -46,10 +46,10 @@ export default function BookingPackagePage() {
 
             {loading ? (
                 <p>Loading...</p>
-            ) : paginatedBookingdes.length > 0 ? (
+            ) : paginatedBookings.length > 0 ? (
                 <>
                     <ul className="space-y-4">
-                        {paginatedBookingdes.map((booking) => (
+                        {paginatedBookings.map((booking) => (
                             <li key={booking.id} className="p-4 border rounded shadow">
                                 <div>Package: <b>{booking.package?.name}</b></div>
                                 <div>Kendaraan: {booking.vehicle?.name}</div>

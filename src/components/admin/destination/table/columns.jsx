@@ -78,10 +78,9 @@ export const columns = [
     header: "Image",
     cell: ({ row }) => {
       const image = row.getValue("image");
-
-      const imageUrl = image
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`
-        : null;
+      const imageUrl =
+        row.original.image_url ||
+        (image ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/images/${image}` : null);
 
       if (!imageUrl) {
         return (
@@ -95,9 +94,13 @@ export const columns = [
         <div className="w-16 h-12 relative">
           <img
             src={imageUrl}
-            alt={row.getValue("name") || "Package image"}
+            alt={row.getValue("name") || "Destination image"}
             className="w-full h-full object-cover rounded shadow"
             loading="lazy"
+            onError={e => {
+              e.target.onerror = null;
+              e.target.src = "/images/default.jpg";
+            }}
           />
         </div>
       );

@@ -33,7 +33,12 @@ export default function EditDestinationDialog({ destination }) {
   const getImageUrl = (image) => {
     if (!image) return null;
     if (image instanceof File) return URL.createObjectURL(image);
-    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`;
+    // Cek jika image sudah berupa URL penuh
+    if (typeof image === "string" && image.startsWith("http")) return image;
+    // Fallback ke image_url dari destination jika ada
+    if (destination.image_url) return destination.image_url;
+    // Fallback ke path manual
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/images/${image}`;
   };
 
   const preview = getImageUrl(form.image);

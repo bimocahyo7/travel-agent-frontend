@@ -90,10 +90,9 @@ export const columns = [
     header: "Image",
     cell: ({ row }) => {
       const image = row.getValue("image");
-
-      const imageUrl = image
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`
-        : null;
+      const imageUrl =
+        row.original.image_url ||
+        (image ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}` : null);
 
       if (!imageUrl) {
         return (
@@ -136,11 +135,10 @@ export const columns = [
       return (
         <div className="flex justify-center">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              status === "active"
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${status === "active"
                 ? "bg-green-100 text-green-800"
                 : "bg-red-100 text-red-800"
-            }`}
+              }`}
           >
             {status}
           </span>

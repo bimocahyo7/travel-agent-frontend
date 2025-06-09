@@ -12,7 +12,7 @@ export default function Home() {
     <>
       <Navbar />
       <Intro />
-      <TabNavigation />
+      {/* <TabNavigation /> */}
       <Destination />
       <Filter />
       <Package />

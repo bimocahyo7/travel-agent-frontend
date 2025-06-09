@@ -16,7 +16,7 @@ export default function Dashboard() {
     <RoleGuard allowedRoles={["customer"]}>
       <Navbar />
       <Intro /> 
-      <TabNavigation />
+      {/* <TabNavigation /> */}
       <Destination />
       <Filter />
       <Package />

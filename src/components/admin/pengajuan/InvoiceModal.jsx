@@ -90,6 +90,30 @@ export default function InvoiceModal({ open, onClose, invoiceData }) {
               {loading ? "Mengirim..." : "Kirim Invoice ke Customer"}
             </Button>
           </form>
+          {invoiceSent && (
+            <Button
+              variant="secondary"
+              disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                setError("");
+                setSuccess("");
+                try {
+                  await axios.post(`/api/invoices/${invoiceData?.id}/resend`);
+                  setSuccess("Invoice berhasil dikirim ulang ke customer!");
+                } catch (err) {
+                  setError(
+                    err.response?.data?.message || "Gagal mengirim ulang invoice."
+                  );
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              className="mt-2"
+            >
+              Kirim Ulang Invoice ke Customer
+            </Button>
+          )}
           <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
             <AlertDialogContent>
               <AlertDialogHeader>

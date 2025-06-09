@@ -44,6 +44,9 @@ export default function EditPackageDialog({ packages }) {
   const getImageUrl = (image) => {
     if (!image) return null;
     if (image instanceof File) return URL.createObjectURL(image);
+    // Gunakan image_url jika ada
+    if (packages.image_url) return packages.image_url;
+    // Fallback ke path manual
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${image}`;
   };
 
