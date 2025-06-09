@@ -90,6 +90,11 @@ const data = {
       url: "/admin/pengajuan",
       icon: IconFileDescription,
     },
+    {
+      title: "Invoice",
+      url: "/admin/invoice",
+      icon: IconFileDescription,
+    },
   ],
 };
 
