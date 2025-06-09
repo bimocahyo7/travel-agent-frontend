@@ -31,38 +31,53 @@ export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
         <DialogHeader>
           <DialogTitle>Detail Pengajuan</DialogTitle>
         </DialogHeader>
-        <div className="space-y-2 py-2">
-          <div><b>ID Pengajuan:</b> {pengajuanData?.id}</div>
-          <div><b>Instansi:</b> {pengajuanData?.institution}</div>
-          <div><b>Pemohon:</b> {pengajuanData?.applicant}</div>
-          <div><b>Email:</b> {pengajuanData?.email}</div>
-          <div><b>Tujuan:</b> {pengajuanData?.destination}</div>
-          <div><b>Kendaraan:</b> {pengajuanData?.vehicle_type}</div>
-          <div><b>Tanggal Berangkat:</b> {pengajuanData?.departure_date}</div>
-          <div><b>Tanggal Kembali:</b> {pengajuanData?.return_date}</div>
-          <div><b>Peserta:</b> {pengajuanData?.participants}</div>
-          <div><b>Catatan:</b> {pengajuanData?.notes}</div>
-          <div><b>Status:</b> {statusLabel(pengajuanData?.status)}</div>
-          {/* Tampilkan gambar bukti pembayaran jika tersedia */}
-          {/* <div>
-            <b>Bukti Pembayaran:</b>
-            {pengajuanData?.payment_proof ? (
-              <div className="mt-2">
-                <img
-                  src={pengajuanData.payment_proof}
-                  alt="Bukti Pembayaran"
-                  className="max-w-full rounded-lg border"
-                />
-              </div>
-            ) : (
-              <span className="text-gray-500">Tidak ada bukti pembayaran.</span>
-            )}
-          </div> */}
+        <div className="bg-gray-50 rounded-lg p-4 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
+          <div>
+            <span className="text-gray-500 text-xs">ID Pengajuan</span>
+            <div className="font-semibold text-lg">{pengajuanData?.id}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Instansi</span>
+            <div className="font-medium">{pengajuanData?.institution}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Pemohon</span>
+            <div className="font-medium">{pengajuanData?.applicant}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Email</span>
+            <div className="font-medium">{pengajuanData?.email}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Tujuan</span>
+            <div className="font-medium">{pengajuanData?.destination}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Kendaraan</span>
+            <div className="font-medium">{pengajuanData?.vehicle_type}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Tanggal Berangkat</span>
+            <div className="font-medium">{pengajuanData?.departure_date}</div>
+          </div>
+          <div>
+            <span className="text-gray-500 text-xs">Tanggal Kembali</span>
+            <div className="font-medium">{pengajuanData?.return_date}</div>
+          </div>
+          <div className="sm:col-span-2">
+            <span className="text-gray-500 text-xs">Peserta</span>
+            <div className="font-medium">{pengajuanData?.participants}</div>
+          </div>
+          <div className="sm:col-span-2">
+            <span className="text-gray-500 text-xs">Catatan</span>
+            <div className="font-medium">{pengajuanData?.notes}</div>
+          </div>
+          <div className="sm:col-span-2 flex items-center gap-2 mt-2">
+            <span className="text-gray-500 text-xs">Status</span>
+            <span className={`px-2 py-1 rounded text-xs font-semibold ${pengajuanData?.status === 'ditolak' ? 'bg-red-100 text-red-700' : pengajuanData?.status === 'lunas' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{statusLabel(pengajuanData?.status)}</span>
+          </div>
         </div>
         <DialogFooter>
-          <Button variant="secondary" onClick={() => alert("Export PDF belum diimplementasikan")}>
-            Export PDF
-          </Button>
           <DialogClose asChild>
             <Button variant="outline">Tutup</Button>
           </DialogClose>

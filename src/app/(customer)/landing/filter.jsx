@@ -26,9 +26,24 @@ function RequestForm() {
   const [errorSubmit, setError] = useState("");
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const { destinations, loading: loadingDestinations } = useDestinations();
+  const [errorDate, setErrorDate] = useState("");
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    // Validasi tanggal pulang tidak boleh sebelum tanggal berangkat
+    if (
+      (name === "departureDate" && form.returnDate) ||
+      (name === "returnDate" && form.departureDate)
+    ) {
+      const departure = name === "departureDate" ? value : form.departureDate;
+      const ret = name === "returnDate" ? value : form.returnDate;
+      if (departure && ret && ret < departure) {
+        setErrorDate("Tanggal pulang tidak boleh lebih awal dari tanggal berangkat.");
+      } else {
+        setErrorDate("");
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -36,6 +51,13 @@ function RequestForm() {
     setSuccess("");
     setError("");
     setLoadingSubmit(true);
+    // Validasi tanggal pulang tidak boleh sebelum tanggal berangkat
+    if (form.departureDate && form.returnDate && form.returnDate < form.departureDate) {
+      setErrorDate("Tanggal pulang tidak boleh lebih awal dari tanggal berangkat.");
+      setLoadingSubmit(false);
+      return;
+    }
+    setErrorDate("");
     // Validasi user login
     if (!user || !user.id) {
       setError("Silakan login terlebih dahulu untuk mengajukan permintaan.");
@@ -84,6 +106,9 @@ function RequestForm() {
           </h2>
           {success && <div className="mb-4 p-2 bg-green-100 border border-green-400 text-green-700 rounded">{success}</div>}
           {errorSubmit && <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">{errorSubmit}</div>}
+          {errorDate && (
+            <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">{errorDate}</div>
+          )}
           <form onSubmit={handleSubmit} className="md:flex gap-8 space-y-4 md:space-y-0">
             {/* Left Side */}
             <div className="flex-1 space-y-4">

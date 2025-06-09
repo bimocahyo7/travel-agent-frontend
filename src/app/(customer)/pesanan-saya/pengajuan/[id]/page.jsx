@@ -5,7 +5,8 @@ import Step from "@/components/customer/pengajuan/Step";
 import InvoiceCustomer from "@/components/customer/pengajuan/InvoiceCustomer";
 import { useInvoice } from "@/hooks/invoice";
 import { usePengajuan } from "@/hooks/pengajuan";
-import { exportPengajuanPdf } from "@/lib/exportPdf";
+import { exportPengajuanPdf, generatePengajuanPdfDataUrl, downloadPdfFromDataUrl } from "@/lib/exportPdf";
+import PDFPreviewModal from "@/components/admin/payment/PDFPreviewModal";
 
 const STATUS_LABELS = {
   menunggu_konfirmasi: "Menunggu Konfirmasi",
@@ -24,6 +25,8 @@ export default function PengajuanDetailPage() {
   const { pengajuans, loading, error, updatePengajuan } = usePengajuan();
   const [loadingId, setLoadingId] = React.useState(null);
   const { invoice, loading: invoiceLoading } = useInvoice(id);
+  const [pdfPreviewOpen, setPdfPreviewOpen] = React.useState(false);
+  const [pdfDataUrl, setPdfDataUrl] = React.useState("");
 
   const pengajuan = pengajuans.find((p) => String(p.id) === String(id));
 
@@ -31,6 +34,19 @@ export default function PengajuanDetailPage() {
   const handleExportPdf = () => {
     if (!pengajuan) return;
     exportPengajuanPdf({ pengajuan, invoice });
+  };
+
+  // Function to handle PDF preview
+  const handlePreviewPdf = () => {
+    if (!pengajuan) return;
+    const dataUrl = generatePengajuanPdfDataUrl({ pengajuan, invoice });
+    setPdfDataUrl(dataUrl);
+    setPdfPreviewOpen(true);
+  };
+
+  const handleDownloadPdf = () => {
+    if (!pdfDataUrl) return;
+    downloadPdfFromDataUrl(pdfDataUrl, `pengajuan_${pengajuan.id}.pdf`);
   };
 
   // Fungsi untuk menentukan status selanjutnya
@@ -75,12 +91,14 @@ export default function PengajuanDetailPage() {
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-blue-700 mb-2">Detail Pengajuan</h1>
           <div className="flex space-x-2">
-            <button
-              onClick={handleExportPdf}
-              className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 text-white text-sm"
-            >
-              Export PDF
-            </button>
+            {pengajuan.status === "lunas" && (
+              <button
+                onClick={handlePreviewPdf}
+                className="px-4 py-2 rounded bg-green-500 hover:bg-green-600 text-white text-sm"
+              >
+                Export PDF
+              </button>
+            )}
             <button onClick={() => router.back()} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-sm">Kembali</button>
           </div>
         </div>
@@ -159,6 +177,7 @@ export default function PengajuanDetailPage() {
             active={pengajuan.status === "ditolak"}
             label="Ditolak"
             rejected={pengajuan.status === "ditolak"}
+            disabled={pengajuan.status === "lunas"}
           />
         </div>
         <hr className="mb-4" />
@@ -171,6 +190,12 @@ export default function PengajuanDetailPage() {
           )
         )}
       </div>
+      <PDFPreviewModal
+        open={pdfPreviewOpen}
+        onClose={() => setPdfPreviewOpen(false)}
+        pdfDataUrl={pdfDataUrl}
+        onDownload={handleDownloadPdf}
+      />
     </div>
   );
 } 

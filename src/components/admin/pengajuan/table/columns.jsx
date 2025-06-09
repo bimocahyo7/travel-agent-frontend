@@ -92,7 +92,8 @@ export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode, onShowPay
       const { updatePengajuan } = usePengajuan();
       const [localStatus, setLocalStatus] = React.useState(row.getValue("status"));
       const id = row.original.id;
-
+      // Find the index of the current status
+      const currentStatusIndex = statusOptions.findIndex(opt => opt.value === localStatus);
       const handleStatusChange = async (value) => {
         setLocalStatus(value);
         const result = await updatePengajuan(id, { status: value });
@@ -118,8 +119,15 @@ export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode, onShowPay
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {statusOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value} className="capitalize">
+            {statusOptions.map((option, idx) => (
+              <SelectItem
+                key={option.value}
+                value={option.value}
+                className="capitalize"
+                disabled={
+                  option.value === "disetujui" || (idx !== currentStatusIndex && idx !== currentStatusIndex + 1)
+                }
+              >
                 {option.label}
               </SelectItem>
             ))}
