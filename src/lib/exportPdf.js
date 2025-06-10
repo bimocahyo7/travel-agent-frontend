@@ -22,6 +22,17 @@ function hitungDurasiHari(tglBerangkat, tglKembali) {
 export function generatePengajuanPdfDataUrl({ pengajuan, invoice }) {
   const doc = new jsPDF();
 
+  // Tambahkan watermark LUNAS jika status pengajuan lunas
+  if (pengajuan?.status === "lunas") {
+    doc.saveGraphicsState();
+    doc.setFontSize(60);
+    doc.setTextColor(0, 200, 83); // hijau muda
+    doc.setFont('helvetica', 'bold');
+    doc.setGState(new doc.GState({ opacity: 0.15 }));
+    doc.text("LUNAS", 105, 150, { align: "center", angle: -25 });
+    doc.restoreGraphicsState();
+  }
+
   // Header Travel Agent
   doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
@@ -34,7 +45,7 @@ export function generatePengajuanPdfDataUrl({ pengajuan, invoice }) {
   // Judul Invoice
   doc.setFontSize(15);
   doc.setFont('helvetica', 'bold');
-  doc.text("INVOICE PEMBAYARAN", 105, 40, { align: "center" });
+  doc.text("INVOICE PENGAJUAN", 105, 40, { align: "center" });
 
   // Garis pemisah
   doc.setLineWidth(0.7);
