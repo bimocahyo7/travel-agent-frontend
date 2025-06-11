@@ -71,7 +71,7 @@ const data = {
       children: [
         { title: "Pengajuan", url: "/admin/pengajuan" },
         { title: "Invoice", url: "/admin/pengajuan/invoice" },
-        { title: "Payment", url: "/admin/pengajuan/paymentsub" },
+        { title: "Payment", url: "/admin/paymentsub" },
       ],
     },
     {

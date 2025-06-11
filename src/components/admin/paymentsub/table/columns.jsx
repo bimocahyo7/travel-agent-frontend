@@ -1,12 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { formatDate, formatRupiah } from "@/lib/utils";
 
 export const columns = ({
@@ -21,7 +15,7 @@ export const columns = ({
   },
   {
     accessorKey: "pengajuan",
-    header: "Pengajuan",
+    header: "Institution",
     cell: ({ row }) => {
       const pengajuan = row.original.pengajuan;
       return pengajuan ? pengajuan.institution : "-";
@@ -46,20 +40,25 @@ export const columns = ({
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Status", 
     cell: ({ row }) => {
       const status = row.getValue("status") || "belum_lunas";
+      const paidAt = row.getValue("paid_at");
+      
+      // If paid_at exists, set status to lunas
+      const displayStatus = paidAt ? "lunas" : status;
+
       return (
         <Badge
           variant={
-            status === "lunas"
+            displayStatus === "lunas"
               ? "success"
-              : status === "ditolak"
+              : displayStatus === "ditolak"
               ? "destructive"
               : "warning"
           }
         >
-          {status.replace("_", " ").toUpperCase()}
+          {displayStatus.replace("_", " ").toUpperCase()}
         </Badge>
       );
     },
@@ -80,39 +79,13 @@ export const columns = ({
       const payment = row.original;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onView(payment)}>
-              <Eye className="mr-2 h-4 w-4" />
-              View Details
-            </DropdownMenuItem>
-            {payment.status === "belum_lunas" && (
-              <DropdownMenuItem onClick={() => onVerify(payment)}>
-                <Badge variant="outline" className="mr-2">
-                  ✓
-                </Badge>
-                Verify Payment
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onClick={() => onEdit(payment)}>
-              <Pencil className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-red-600"
-              onClick={() => onDelete(payment.id)}
-            >
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button 
+          variant="ghost" 
+          className="h-8 w-8 p-0 text-red-600"
+          onClick={() => onDelete(payment.id)}
+        >
+          <Trash className="h-4 w-4" />
+        </Button>
       );
     },
   },
