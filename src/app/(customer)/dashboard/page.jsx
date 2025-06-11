@@ -5,7 +5,7 @@ import Intro from "@/app/(customer)/landing/Intro";
 import Navbar from "@/app/(customer)/landing/Navbar";
 import Package from "@/app/(customer)/landing/Package";
 import Footer from "@/app/(customer)/landing/Footer";
-import Filter from "@/app/(customer)/landing/filter";
+import Filter from "@/app/(customer)/landing/TravelRequestForm";
 import TabNavigation from "@/app/(customer)/landing/TabNavigation";
 import RoleGuard from "@/components/auth/RoleGuard";
 import Link from "next/link";
