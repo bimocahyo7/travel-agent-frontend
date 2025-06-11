@@ -5,17 +5,9 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/auth";
-import AuthSessionStatus from "@/app/(auth)/AuthSessionStatus";
 import InputError from "@/components/ui/InputError";
 import Link from "next/link";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -85,8 +77,7 @@ export function LoginForm({ className, ...props }) {
         });
         setValidationErrors(errors);
       }
-
-      // Loading proses login
+    } finally {
       setIsLoading(false);
     }
   };
@@ -106,112 +97,97 @@ export function LoginForm({ className, ...props }) {
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Masukkan email kamu sebelum login ke akunmu
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <AuthSessionStatus
-            className="mb-4 text-sm text-green-600"
-            status={status}
+    <form
+      onSubmit={submitForm}
+      className={cn("flex flex-col gap-4", className)}
+      {...props}
+    >
+      <div className="flex flex-col gap-1 text-center">
+        <h1 className="text-2xl font-bold">Welcome to Tripnesia</h1>
+        <p className="text-muted-foreground text-sm text-balance">
+          Access your personalized travel experience
+        </p>
+      </div>
+
+      <div className="grid gap-4 mt-5">
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+            autoFocus
+            className={validationErrors.email ? "border-red-500" : ""}
           />
-          <form onSubmit={submitForm} className="flex flex-col gap-6">
-            {/* Email */}
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+          {validationErrors.email && (
+            <p className="text-sm text-red-500">{validationErrors.email}</p>
+          )}
+          <InputError messages={errors.email} className="mt-2" />
+        </div>
+
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={handleEmailChange}
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={handlePasswordChange}
                 required
-                autoFocus
-                className={validationErrors.email ? "border-red-500" : ""}
+                className={validationErrors.password ? "border-red-500" : ""}
               />
-              {validationErrors.email && (
-                <p className="text-sm text-red-500">{validationErrors.email}</p>
-              )}
-              <InputError messages={errors.email} className="mt-2" />
+              <Button
+                type="button"
+                variant="ghost"
+                className="absolute h-full cursor-pointer right-1 top-1/2 -translate-y-1/2 px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <Eye className="h-5 w-5" />
+                ) : (
+                  <EyeOff className="h-5 w-5" />
+                )}
+              </Button>
             </div>
+            {validationErrors.password && (
+              <p className="text-sm text-red-500">
+                {validationErrors.password}
+              </p>
+            )}
+            <InputError messages={errors.password} className="mt-2" />
+          </div>
+        </div>
 
-            {/* Password */}
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-              </div>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
-                  autoComplete="current-password"
-                  className={validationErrors.password ? "border-red-500" : ""}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="absolute h-full cursor-pointer right-1 top-1/2 -translate-y-1/2 px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <Eye className="h-5 w-5" />
-                  ) : (
-                    <EyeOff className="h-5 w-5" />
-                  )}
-                </Button>
-              </div>
-              {validationErrors.password && (
-                <p className="text-sm text-red-500">
-                  {validationErrors.password}
-                </p>
-              )}
-              <InputError messages={errors.password} className="mt-2" />
-            </div>
+        <Button
+          type="submit"
+          className="w-full bg-[#155E95] cursor-pointer"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait...
+            </>
+          ) : (
+            "Login"
+          )}
+        </Button>
 
-            {/* Remember Me */}
-            {/* <div className="flex items-center space-x-2">
-              <input
-                id="remember_me"
-                type="checkbox"
-                checked={shouldRemember}
-                onChange={e => setShouldRemember(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <Label htmlFor="remember_me">Remember me</Label>
-            </div> */}
-
-            <Button
-              type="submit"
-              className="w-full cursor-pointer"
-              size="sm"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait...
-                </>
-              ) : (
-                "Login"
-              )}
-            </Button>
-            <Link
-              href="/register"
-              className="text-sm text-muted-foreground hover:underline"
-            >
-              Belum punya akun?
-            </Link>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+        <div className="text-center text-sm">
+          Don't have an account?{" "}
+          <Link
+            href="/register"
+            className="underline underline-offset-4 hover:text-primary font-semibold"
+          >
+            Register
+          </Link>
+        </div>
+      </div>
+    </form>
   );
 }
