@@ -7,38 +7,39 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
   DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useDestinations } from "@/hooks/useDestinations";
+import { useVehicle } from "@/hooks/vehicle"; // Use useVehicle hook
 import { SquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 
-export default function AddDestinationDialog() {
-  const { createDestination } = useDestinations();
+export default function AddVehicleDialog() {
+  const { addVehicle } = useVehicle(); // Use addVehicle function
   const [form, setForm] = useState({
     name: "",
-    location: "",
+    type: "",
+    license_plate: "",
+    capacity: "",
+    status: "available",
     description: "",
-    price: "",
-    image: null,
   });
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState({});
 
-  const destinationSchema = z.object({
-    name: z.string().min(3, "Nama destinasi minimal 3 karakter"),
-    location: z.string().min(3, "Lokasi minimal 3 karakter"),
-    description: z.string().min(3, "Deskripsi minimal 3 karakter"),
-    price: z.number().min(1, "Masukkan harga valid"),
-    image: z.instanceof(File, { message: "Gambar wajib diupload" }),
+  const vehicleSchema = z.object({
+    name: z.string().min(3, "Nama kendaraan minimal 3 karakter"),
+    type: z.string().min(3, "Tipe kendaraan minimal 3 karakter"),
+    license_plate: z.string().min(3, "Plat nomor minimal 3 karakter"),
+    capacity: z.number().min(1, "Masukkan kapasitas valid"),
+    status: z.enum(["available", "in_use", "maintenance"]),
+    description: z.string().optional(),
   });
 
   const handleChange = (e) => {
@@ -46,23 +47,15 @@ export default function AddDestinationDialog() {
     setError((prev) => ({ ...prev, [e.target.name]: undefined }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setForm({ ...form, image: file });
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
   const resetForm = () => {
     setForm({
       name: "",
-      location: "",
+      type: "",
+      license_plate: "",
+      capacity: "",
+      status: "available",
       description: "",
-      price: "",
-      image: null,
     });
-    setPreview(null);
     setError({});
     setLoading(false);
   };
@@ -71,9 +64,9 @@ export default function AddDestinationDialog() {
     e.preventDefault();
     setLoading(true);
 
-    const result = destinationSchema.safeParse({
+    const result = vehicleSchema.safeParse({
       ...form,
-      price: Number(form.price),
+      capacity: Number(form.capacity),
     });
 
     if (!result.success) {
@@ -91,22 +84,20 @@ export default function AddDestinationDialog() {
     try {
       const formData = new FormData();
       formData.append("name", form.name);
-      formData.append("location", form.location);
+      formData.append("type", form.type);
+      formData.append("license_plate", form.license_plate);
+      formData.append("capacity", form.capacity);
+      formData.append("status", form.status);
       formData.append("description", form.description);
-      formData.append("price", form.price);
 
-      if (form.image) {
-        formData.append("image", form.image);
-      }
-
-      await createDestination(formData);
+      await addVehicle(formData); // Call addVehicle
 
       resetForm();
       setOpen(false);
-      toast.success("Destinasi berhasil ditambahkan");
+      toast.success("Kendaraan berhasil ditambahkan");
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || "Gagal menambahkan destinasi!",
+        err?.response?.data?.message || "Gagal menambahkan kendaraan!",
       );
     } finally {
       setLoading(false);
@@ -118,23 +109,17 @@ export default function AddDestinationDialog() {
       open={open}
       onOpenChange={(isOpen) => {
         setOpen(isOpen);
-        // Reset saat modal ditutup
         if (!isOpen) resetForm();
       }}
     >
       <DialogTrigger asChild>
         <Button className="bg-teal-200 cursor-pointer" variant="primary">
-          <SquarePlus /> Add Destination
+          <SquarePlus /> Add Vehicle
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="min-w-2xl w-full"
-        onPointerDownOutside={(e) => {
-          e.preventDefault();
-        }}
-      >
+      <DialogContent className="min-w-2xl w-full">
         <DialogHeader>
-          <DialogTitle>Add Destination</DialogTitle>
+          <DialogTitle>Add Vehicle</DialogTitle>
         </DialogHeader>
         <form
           onSubmit={handleSubmit}
@@ -147,7 +132,7 @@ export default function AddDestinationDialog() {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Enter destination name"
+                placeholder="Enter vehicle name"
                 required
               />
               <div className="min-h-[10px]">
@@ -157,78 +142,92 @@ export default function AddDestinationDialog() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Location</Label>
+              <Label>Type</Label>
               <Input
-                name="location"
-                value={form.location}
+                name="type"
+                value={form.type}
                 onChange={handleChange}
-                placeholder="Enter location name"
+                placeholder="Enter vehicle type"
                 required
               />
               <div className="min-h-[10px]">
-                {error.location && (
-                  <p className="text-rose-400 text-sm">{error.location}</p>
+                {error.type && (
+                  <p className="text-rose-400 text-sm">{error.type}</p>
                 )}
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Price</Label>
+              <Label>License Plate</Label>
               <Input
-                name="price"
-                type="number"
-                value={form.price}
+                name="license_plate"
+                value={form.license_plate}
                 onChange={handleChange}
-                placeholder="Enter price"
-                min={0}
+                placeholder="Enter license plate"
                 required
               />
               <div className="min-h-[10px]">
-                {error.price && (
-                  <p className="text-rose-400 text-sm">{error.price}</p>
+                {error.license_plate && (
+                  <p className="text-rose-400 text-sm">{error.license_plate}</p>
+                )}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Capacity</Label>
+              <Input
+                name="capacity"
+                type="number"
+                value={form.capacity}
+                onChange={handleChange}
+                placeholder="Enter capacity"
+                min={1}
+                required
+              />
+              <div className="min-h-[10px]">
+                {error.capacity && (
+                  <p className="text-rose-400 text-sm">{error.capacity}</p>
                 )}
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-3">
-            <Label>Description</Label>
-            <Textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="Enter description destination"
-              required
-              className="h-32"
-            />
-            <div className="min-h-[6px]">
-              {error.description && (
-                <p className="text-rose-400 text-sm">{error.description}</p>
-              )}
-            </div>
-            <div>
-              <label className="block mb-1 text-sm font-medium">Image</label>
-              <Input
-                name="image"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              <div className="min-h-[10px] mt-2">
-                {error.image && (
-                  <p className="text-rose-400 text-sm">{error.image}</p>
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                className="border rounded px-3 py-2"
+                required
+              >
+                <option value="available">Available</option>
+                <option value="in_use">In Use</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+              <div className="min-h-[10px]">
+                {error.status && (
+                  <p className="text-rose-400 text-sm">{error.status}</p>
                 )}
               </div>
-              {preview && (
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="mt-2 w-32 h-20 object-cover rounded"
-                />
-              )}
+            </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Enter description"
+                rows={4}
+              />
+              <div className="min-h-[10px]">
+                {error.description && (
+                  <p className="text-rose-400 text-sm">{error.description}</p>
+                )}
+              </div>
             </div>
           </div>
           {/* Footer full width */}
-          <DialogFooter className="md:col-span-2 flex justify-end gap-2 mt-2">
+          <div className="md:col-span-2 flex justify-end gap-2 mt-2">
             <DialogClose asChild>
               <Button
                 type="button"
@@ -242,7 +241,7 @@ export default function AddDestinationDialog() {
             <Button type="submit" disabled={loading} className="cursor-pointer">
               {loading ? "Saving..." : "Save"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

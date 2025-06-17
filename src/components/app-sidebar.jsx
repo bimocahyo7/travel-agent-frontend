@@ -65,6 +65,11 @@ const data = {
       url: "#",
       icon: IconUsers,
     },
+    {
+      title: "Pengajuan",
+      url: "#",
+      icon: IconFileDescription,
+    },
   ],
   navClouds: [
     {

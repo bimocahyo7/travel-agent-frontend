@@ -1,30 +1,16 @@
 "use client";
 
 import {
-  IconCamera,
-  IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
 } from "@tabler/icons-react";
 
-import { NavMain } from "@/components/admin/nav-main";
-import { NavUser } from "@/components/admin/nav-user";
+import { NavMain } from "@/components/customer/nav-main";
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -32,9 +18,7 @@ import {
 import {
   BookText,
   CalendarCheck2,
-  Car,
   Map,
-  Star,
   TicketsPlane,
 } from "lucide-react";
 
@@ -42,48 +26,24 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/admin/dashboard",
+      url: "/pesanan-saya",
       icon: IconDashboard,
     },
     {
-      title: "Destination",
-      url: "/admin/destination",
-      icon: Map,
-    },
-    {
-      title: "Vehicle",
-      url: "/admin/vehicle",
-      icon: Car,
-    },
-    {
-      title: "Package",
-      url: "/admin/package",
-      icon: IconFolder,
-    },
-    {
       title: "Booking",
-      url: "/admin/booking",
-      icon: CalendarCheck2,
-    },
-    {
-      title: "Payment",
-      url: "/admin/payment",
-      icon: IconChartBar,
-    },
-    {
-      title: "Transaction",
-      url: "/admin/transaction",
-      icon: BookText,
-    },
-      {
-        title: "Review",
-        url: "/admin/review",
-        icon: Star,
-      },
-    {
-      title: "Pengajuan",
-      url: "/admin/pengajuan",
-      icon: IconFileDescription,
+      icon: BookText, // Pilih icon yang sesuai, misal BookText
+      children: [
+        {
+          title: "Booking Destination",
+          url: "/pesanan-saya/booking-destination",
+          icon: Map,
+        },
+        {
+          title: "Booking Package",
+          url: "/pesanan-saya/booking-package",
+          icon: CalendarCheck2,
+        },
+      ],
     },
   ],
 };
@@ -113,8 +73,16 @@ export function AppSidebar({ ...props }) {
         <NavMain items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+      <div className="mt-auto p-4">
+        <Link
+          href="/dashboard"
+          className="block w-full text-center px-4 py-2 bg-cyan-800 text-white rounded hover:bg-cyan-700 transition"
+        >
+          ← Kembali ke Dashboard
+        </Link>
+      </div>
       </SidebarFooter>
     </Sidebar>
   );
 }
+export default AppSidebar;

@@ -22,12 +22,11 @@ const CustomerLayout = ({ children }) => {
   }
 
   return (
-    // <RoleGuard allowedRoles={["customer"]}>
+    <RoleGuard allowedRoles={["customer"]}>
       <div className="min-h-screen flex bg-gray-100">
-        <div user={user} />
-        <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1">{children}</main>
       </div>
-    // </RoleGuard>
+    </RoleGuard>
   );
 };
 

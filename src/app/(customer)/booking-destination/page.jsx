@@ -59,7 +59,7 @@ export default function BookingDestinationPage() {
             localStorage.removeItem("selectedDestinationId");
             localStorage.removeItem("passengerCount");
             setMessage("Booking berhasil!");
-            router.push("/dashboard2");
+            router.push("/dashboard");
         } else {
             setMessage("Booking gagal.");
         }
