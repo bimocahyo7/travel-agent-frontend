@@ -260,7 +260,7 @@ function RequestForm() {
                   {Array.isArray(vehicles) &&
                     vehicles.map((vehicle) => (
                       <option key={vehicle.id} value={vehicle.id}>
-                        {vehicle.type}
+                        {vehicle.name}
                       </option>
                     ))}
                 </select>
