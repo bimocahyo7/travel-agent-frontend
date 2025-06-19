@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/auth";
-import Loading from "@/app/(customer)/Loading";
+import Loading from "@/components/common/Loading";
 import RoleGuard from "@/components/auth/RoleGuard";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
