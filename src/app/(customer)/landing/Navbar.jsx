@@ -1,16 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, TicketsPlane } from "lucide-react";
+import {
+  Menu,
+  X,
+  TicketsPlane,
+  TicketIcon,
+  Settings,
+  LogOut,
+  User,
+} from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ProfileModal from "@/components/auth/ProfileModal";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,39 +80,60 @@ function Navbar() {
 
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
-              user.role === "admin" ? (
-                <Link
-                  href="/dashboard"
-                  className="text-cyan-800 font-semibold hover:text-cyan-600"
-                >
-                  Dashboard
-                </Link>
-              ) : (
-                <div className="relative">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Avatar className="cursor-pointer">
-                        <AvatarImage src={user.profilePhotoUrl} />
-                        <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+              <div className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-cyan-50 via-cyan-100/70 to-cyan-50 border border-cyan-200/60 shadow-sm rounded-3xl px-3 py-1.5">
+                      <Avatar className="h-8 w-8 border-2 border-cyan-200/80 shadow-sm">
+                        <AvatarImage
+                          src={user.profilePhotoUrl}
+                          alt={user.name}
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-cyan-600 to-cyan-700 text-white">
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
                       </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="absolute right-0 z-50 mt-2 w-40 bg-white shadow-lg rounded-md">
-                      <DropdownMenuItem onClick={() => router.push("/pesanan-saya")}>
-                        Pesanan Saya
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setIsProfileModalOpen(true)}>
-                        Setting
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={logout}>
-                        Log Out
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-
-              )
+                      <div className="hidden md:block">
+                        <p className="text-sm font-medium bg-gradient-to-r from-cyan-800 to-cyan-600 bg-clip-text text-transparent">
+                          {user.name}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 mt-2" align="end">
+                    <div className="px-2 py-1.5 border-b border-slate-100">
+                      <p className="text-sm font-medium text-slate-900">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 cursor-pointer"
+                      onClick={() => router.push("/pesanan-saya")}
+                    >
+                      <TicketIcon className="w-4 h-4" />
+                      <span>Pesanan Saya</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 cursor-pointer"
+                      onClick={() => setIsProfileModalOpen(true)}
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Edit Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 text-red-600 cursor-pointer"
+                      onClick={logout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span className="text-red-600">Keluar</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
-
               <>
                 <button
                   type="button"
@@ -182,12 +207,14 @@ function Navbar() {
                     <>
                       <Link
                         href="/login"
-                        className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600">
+                        className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600"
+                      >
                         Sign In
                       </Link>
                       <Link
                         href="/register"
-                        className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
+                        className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full"
+                      >
                         Sign Up
                       </Link>
                     </>
