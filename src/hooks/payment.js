@@ -3,18 +3,11 @@ import axios from "@/lib/axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const usePayment = () => {
+export function usePayment() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // Payment status enum
-  const PAYMENT_STATUS = {
-    PENDING: 'pending',
-    COMPLETED: 'completed',
-    FAILED: 'failed'
-  };
 
   // Fetch all payments
   const { data: payments, mutate } = useSWR("/api/payments", () =>
@@ -26,38 +19,91 @@ export const usePayment = () => {
           router.push("/login");
           return [];
         }
-        setError("Gagal mengambil data pembayaran");
+        setError("Failed to fetch payments");
         console.error("Error fetching payments:", error);
         return [];
       })
   );
 
+  // Add a new payment
+  const addPayment = async (paymentData) => {
+    try {
+      setLoading(true);
+      let dataToSend = paymentData;
+      let headers = {};
+      if (paymentData.bukti_pembayaran instanceof File) {
+        dataToSend = new FormData();
+        Object.entries(paymentData).forEach(([key, value]) => {
+          dataToSend.append(key, value);
+        });
+        headers['Content-Type'] = 'multipart/form-data';
+      }
+      const response = await axios.post("/api/payments", dataToSend, { headers });
+      await mutate();
+      setSuccess("Payment added successfully");
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        router.push("/login");
+        return false;
+      }
+      setError(error.response?.data?.message || "Failed to add payment");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Update an existing payment
   const updatePayment = async (id, paymentData) => {
     try {
       setLoading(true);
-      // Ensure status matches enum
-      const updatedData = {
-        ...paymentData,
-        status: paymentData.status === 'completed' ? PAYMENT_STATUS.COMPLETED : paymentData.status
-      };
-      
-      const response = await axios.put(`/api/payments/${id}`, updatedData);
-      mutate(); // Refresh the payments data
+      let dataToSend = paymentData;
+      let headers = {};
+      if (paymentData.bukti_pembayaran instanceof File) {
+        dataToSend = new FormData();
+        Object.entries(paymentData).forEach(([key, value]) => {
+          dataToSend.append(key, value);
+        });
+        headers['Content-Type'] = 'multipart/form-data';
+      }
+      const response = await axios.put(`/api/payments/${id}`, dataToSend, { headers });
+      await mutate();
+      setSuccess("Payment updated successfully");
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        router.push("/login");
+        return false;
+      }
+      setError(error.response?.data?.message || "Failed to update payment");
+      return false;
+    } finally {
       setLoading(false);
+    }
+  };
+
+  // Delete a payment
+  const deletePayment = async (id) => {
+    try {
+      setLoading(true);
+      await axios.delete(`/api/payments/${id}`);
+      await mutate();
+      setSuccess("Payment deleted successfully");
       return true;
     } catch (error) {
       if (error.response?.status === 401) {
         router.push("/login");
         return false;
       }
-      setError(error.response?.data?.message || "Gagal memperbarui pembayaran");
-      setLoading(false);
+      setError(error.response?.data?.message || "Failed to delete payment");
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Get a single payment by ID
+  // Get a single payment by id
   const getPaymentById = async (id) => {
     try {
       setLoading(true);
@@ -69,23 +115,31 @@ export const usePayment = () => {
         router.push("/login");
         return null;
       }
-      setError(error.response?.data?.message || "Gagal mengambil data pembayaran");
+      setError("Failed to fetch payment details");
       setLoading(false);
       return null;
     }
   };
 
+  // Clear messages
+  const clearMessages = () => {
+    setError("");
+    setSuccess("");
+  };
+
   return {
     payments,
+    loading,
     error,
     success,
-    loading,
+    addPayment,
     updatePayment,
+    deletePayment,
     getPaymentById,
-    PAYMENT_STATUS,
-    setError,
-    setSuccess
+    clearMessages,
+    mutate,
   };
-};
+}
 
-export default usePayment;
+// Alias for compatibility with existing code
+export const usePayments = usePayment;

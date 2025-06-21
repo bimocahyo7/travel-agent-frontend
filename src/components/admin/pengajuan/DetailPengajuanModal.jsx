@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-// Daftar status dan label sesuai dengan columns.jsx
 const statusOptions = [
   { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi Admin" },
   { value: "menunggu_persetujuan", label: "Invoice Dikirim ke Customer" },
@@ -21,10 +20,9 @@ const statusOptions = [
 ];
 
 export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
-  // Mapping status ke label
   const statusLabel = (status) => {
-    const option = statusOptions.find(opt => opt.value === status);
-    return option ? option.label : status || '-';
+    const option = statusOptions.find((opt) => opt.value === status);
+    return option ? option.label : status || "-";
   };
 
   return (
@@ -45,10 +43,26 @@ export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
           <div><b>Peserta:</b> {pengajuanData?.participants}</div>
           <div><b>Catatan:</b> {pengajuanData?.notes}</div>
           <div><b>Status:</b> {statusLabel(pengajuanData?.status)}</div>
-          <div><b>Bukti Pembayaran:</b> {pengajuanData?.payment_proof}</div>
+          {/* Tampilkan gambar bukti pembayaran jika tersedia */}
+          <div>
+            <b>Bukti Pembayaran:</b>
+            {pengajuanData?.payment_proof ? (
+              <div className="mt-2">
+                <img
+                  src={pengajuanData.payment_proof}
+                  alt="Bukti Pembayaran"
+                  className="max-w-full rounded-lg border"
+                />
+              </div>
+            ) : (
+              <span className="text-gray-500">Tidak ada bukti pembayaran.</span>
+            )}
+          </div>
         </div>
         <DialogFooter>
-          <Button variant="secondary" onClick={() => alert('Export PDF belum diimplementasikan')}>Export PDF</Button>
+          <Button variant="secondary" onClick={() => alert("Export PDF belum diimplementasikan")}>
+            Export PDF
+          </Button>
           <DialogClose asChild>
             <Button variant="outline">Tutup</Button>
           </DialogClose>
@@ -56,4 +70,4 @@ export default function DetailPengajuanModal({ open, onClose, pengajuanData }) {
       </DialogContent>
     </Dialog>
   );
-} 
+}
