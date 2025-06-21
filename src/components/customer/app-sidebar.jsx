@@ -20,6 +20,9 @@ import {
   CalendarCheck2,
   Map,
   TicketsPlane,
+  Send,
+  FileText,
+  ClipboardList,
 } from "lucide-react";
 
 const data = {
@@ -44,6 +47,11 @@ const data = {
           icon: CalendarCheck2,
         },
       ],
+    },
+    {
+      title: "Pengajuan",
+      url: "/pesanan-saya/pengajuan",
+      icon: ClipboardList,
     },
   ],
 };

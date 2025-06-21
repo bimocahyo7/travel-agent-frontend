@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -26,60 +27,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { columns } from "./columns";
-import { useState } from "react";
-import { useVehicle } from "@/hooks/vehicle";
-import InvoiceModal from "../InvoiceModal";
-import BarcodeSendModal from "../BarcodeSendModal";
-import PaymentModal from "../PaymentModal";
-import DetailPengajuanModal from "../DetailPengajuanModal";
 
 export function DataTable({ data, isLoading }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
-  const { vehicles } = useVehicle();
-
-  // Tambahkan state untuk modal invoice
-  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
-  const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
-
-  // Tambahkan state untuk modal barcode
-  const [barcodeModalOpen, setBarcodeModalOpen] = useState(false);
-  const [selectedPengajuanId, setSelectedPengajuanId] = useState(null);
-  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
-
-  // State for detail modal
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
-  const [selectedPengajuanDetail, setSelectedPengajuanDetail] = useState(null);
-
-  // Handler untuk show invoice
-  const handleShowInvoice = (rowData) => {
-    setSelectedInvoiceData(rowData);
-    setInvoiceModalOpen(true);
-  };
-
-  const handleShowBarcodeModal = (pengajuanId) => {
-    setSelectedPengajuanId(pengajuanId);
-    setBarcodeModalOpen(true);
-  };
-
-  const handleShowPaymentModal = (pengajuanId) => {
-    setSelectedPengajuanId(pengajuanId);
-    setPaymentModalOpen(true);
-  };
-
-  // Handler for detail modal
-  const handleShowDetailModal = (rowData) => {
-    // Find the vehicle type
-    const vehicle = vehicles?.find((v) => v.id === rowData.vehicle_id);
-    setSelectedPengajuanDetail({ ...rowData, vehicle_type: vehicle ? vehicle.type : rowData.vehicle_id });
-    setDetailModalOpen(true);
-  };
 
   const table = useReactTable({
     data,
-    columns: columns({ vehicles, onShowInvoice: handleShowInvoice, onShowBarcode: handleShowBarcodeModal }),
+    columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -99,17 +56,14 @@ export function DataTable({ data, isLoading }) {
   return (
     <div className="w-full">
       <div className="flex items-center py-3 gap-2">
-        {/* Search Bar */}
         <Input
-          placeholder="Filter institution..."
-          value={table.getColumn("institution")?.getFilterValue() ?? ""}
+          placeholder="Filter customer..."
+          value={table.getColumn("user")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("institution")?.setFilterValue(event.target.value)
+            table.getColumn("user")?.setFilterValue(event.target.value)
           }
           className="max-w-sm border-2 border-slate-400"
         />
-        {/* Button Add Pengajuan (optional, implement if needed) */}
-        {/* <AddPengajuanDialog /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -133,6 +87,7 @@ export function DataTable({ data, isLoading }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -144,7 +99,7 @@ export function DataTable({ data, isLoading }) {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -152,7 +107,6 @@ export function DataTable({ data, isLoading }) {
             ))}
           </TableHeader>
 
-          {/* Loading data from fetch API */}
           {isLoading ? (
             <TableBody>
               <TableRow>
@@ -176,23 +130,10 @@ export function DataTable({ data, isLoading }) {
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext(),
+                          cell.getContext()
                         )}
                       </TableCell>
                     ))}
-                    {/* Button for detail modal */}
-                    <TableCell>
-                      <Button variant="outline" size="sm" onClick={() => handleShowDetailModal(row.original)}>
-                        Detail
-                      </Button>
-                    </TableCell>
-                    {row.original.status === "menunggu_pembayaran" && (
-                      <TableCell>
-                        {/* <Button onClick={() => handleShowPaymentModal(row.original.id)}>
-                          Pembayaran
-                        </Button> */}
-                      </TableCell>
-                    )}
                   </TableRow>
                 ))
               ) : (
@@ -209,6 +150,7 @@ export function DataTable({ data, isLoading }) {
           )}
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -233,26 +175,6 @@ export function DataTable({ data, isLoading }) {
           </Button>
         </div>
       </div>
-      <InvoiceModal
-        open={invoiceModalOpen}
-        onClose={() => setInvoiceModalOpen(false)}
-        invoiceData={selectedInvoiceData}
-      />
-      <BarcodeSendModal
-        open={barcodeModalOpen}
-        onClose={() => setBarcodeModalOpen(false)}
-        pengajuanId={selectedPengajuanId}
-      />
-      <PaymentModal
-        open={paymentModalOpen}
-        onClose={() => setPaymentModalOpen(false)}
-        pengajuanId={selectedPengajuanId}
-      />
-      <DetailPengajuanModal
-        open={detailModalOpen}
-        onClose={() => setDetailModalOpen(false)}
-        pengajuanData={selectedPengajuanDetail}
-      />
     </div>
   );
 }

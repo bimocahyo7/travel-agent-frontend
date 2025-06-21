@@ -10,7 +10,7 @@ import InvoiceModal from "../InvoiceModal";
 // import EditPengajuanDialog from "@/components/admin/pengajuan/EditPengajuanDialog";
 // import DeletePengajuanAlert from "@/components/admin/pengajuan/DeletePengajuanAlert";
 
-export const columns = ({ vehicles = [], onShowInvoice }) => [
+export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode }) => [
   {
     accessorKey: "id",
     header: "ID",
@@ -81,13 +81,13 @@ export const columns = ({ vehicles = [], onShowInvoice }) => [
     header: "Status",
     cell: ({ row }) => {
       const statusOptions = [
-        { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi" },
-        { value: "menunggu_persetujuan", label: "Menunggu Persetujuan" },
+        { value: "menunggu_konfirmasi", label: "Menunggu Konfirmasi Admin" },
+        { value: "menunggu_persetujuan", label: "Invoice Dikirim" },
         { value: "disetujui", label: "Disetujui" },
         { value: "dalam_perjalanan", label: "Dalam Perjalanan" },
-        { value: "menunggu_pembayaran", label: "Menunggu Pembayaran" },
-        { value: "lunas", label: "Lunas" },
-        { value: "ditolak", label: "Ditolak" },
+        { value: "menunggu_pembayaran", label: "Pembayaran Dikirim" },
+        { value: "lunas", label: "Pembayaran Diterima" },
+        { value: "ditolak", label: "Pengajuan Ditolak" },
       ];
       const { updatePengajuan } = usePengajuan();
       const [localStatus, setLocalStatus] = React.useState(row.getValue("status"));
@@ -100,6 +100,9 @@ export const columns = ({ vehicles = [], onShowInvoice }) => [
           toast.success("Status berhasil diupdate");
           if (value === "menunggu_persetujuan" && onShowInvoice) {
             onShowInvoice(row.original);
+          }
+          if (value === "menunggu_pembayaran" && onShowBarcode) {
+            onShowBarcode(id);
           }
         } else {
           toast.error("Gagal update status");
