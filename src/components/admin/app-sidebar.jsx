@@ -71,7 +71,7 @@ const data = {
       children: [
         { title: "Pengajuan", url: "/admin/pengajuan" },
         { title: "Invoice", url: "/admin/pengajuan/invoice" },
-        { title: "Payment", url: "/admin/pengajuan/paymentsub" },
+        { title: "Payment", url: "/admin/paymentsub" },
       ],
     },
     {
@@ -98,16 +98,14 @@ function SidebarMenuRecursive({ items, pathname }) {
       .map((item, idx) =>
         item.children && item.children.some((c) => pathname.startsWith(c.url))
           ? idx
-          : null
+          : null,
       )
-      .filter((v) => v !== null)
+      .filter((v) => v !== null),
   );
 
   const toggleMenu = (idx) => {
     setOpenMenus((prev) =>
-      prev.includes(idx)
-        ? prev.filter((i) => i !== idx)
-        : [...prev, idx]
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
     );
   };
 
@@ -119,10 +117,11 @@ function SidebarMenuRecursive({ items, pathname }) {
             <SidebarMenuButton asChild>
               <div
                 onClick={() => toggleMenu(idx)}
-                className={`flex items-center gap-2 font-semibold cursor-pointer select-none ${item.children.some((c) => pathname.startsWith(c.url))
+                className={`flex items-center gap-2 font-semibold cursor-pointer select-none ${
+                  item.children.some((c) => pathname.startsWith(c.url))
                     ? "bg-slate-100 text-blue-700"
                     : ""
-                  }`}
+                }`}
               >
                 {item.icon && <item.icon className="size-5" />}
                 {item.title}
@@ -138,10 +137,11 @@ function SidebarMenuRecursive({ items, pathname }) {
                     <SidebarMenuButton asChild>
                       <a
                         href={child.url}
-                        className={`flex items-center gap-2 pl-6 py-1 rounded ${pathname.startsWith(child.url)
+                        className={`flex items-center gap-2 pl-6 py-1 rounded ${
+                          pathname.startsWith(child.url)
                             ? "bg-blue-100 text-blue-700 font-bold"
                             : ""
-                          }`}
+                        }`}
                       >
                         {child.title}
                       </a>
@@ -156,24 +156,26 @@ function SidebarMenuRecursive({ items, pathname }) {
             <SidebarMenuButton asChild>
               <a
                 href={item.url}
-                className={`flex items-center gap-2 ${pathname.startsWith(item.url)
+                className={`flex items-center gap-2 ${
+                  pathname.startsWith(item.url)
                     ? "bg-blue-100 text-blue-700 font-bold"
                     : ""
-                  }`}
+                }`}
               >
                 {item.icon && <item.icon className="size-5" />}
                 {item.title}
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
-        )
+        ),
       )}
     </SidebarMenu>
   );
 }
 
 export function AppSidebar({ ...props }) {
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const pathname =
+    typeof window !== "undefined" ? window.location.pathname : "";
   // Jika pakai next/navigation: const pathname = usePathname();
 
   return (
