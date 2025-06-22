@@ -6,9 +6,9 @@ import { usePackages } from '@/hooks/package';
 import { useBooking } from '@/hooks/booking';
 import { useVehicle } from '@/hooks/vehicle';
 import { useAuth } from '@/hooks/auth';
-import axios from '@/lib/axios';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import PaymentModal from '@/components/PaymentModal';
 
 export default function BookingsPage() {
     const router = useRouter();
@@ -22,6 +22,8 @@ export default function BookingsPage() {
     const [bookingDate, setBookingDate] = useState("");
     const [vehicleId, setVehicleId] = useState("");
     const [message, setMessage] = useState("");
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [bookingData, setBookingData] = useState(null);
 
     useEffect(() => {
         const packageId = localStorage.getItem("selectedPackageId");
@@ -43,22 +45,39 @@ export default function BookingsPage() {
         e.preventDefault();
         if (!selectedPackage || !vehicleId || !bookingDate || !user) return;
 
-        const success = await addBooking({
+        const selectedVehicle = vehicles.find(v => v.id == vehicleId);
+        const total = selectedPackage.price * passengerCount;
+        const bookingDetails = {
+            customerName: user.name,
+            destination: selectedPackage.destination?.location ?? 'Tidak tersedia',
+            date: bookingDate,
+            passengers: passengerCount,
+            total: total,
+            vehicle: {
+                name: selectedVehicle.name,
+                type: selectedVehicle.type
+            }
+        };
+
+        setBookingData(bookingDetails);
+        setShowPaymentModal(true);
+    };
+
+    const handleConfirmBooking = async (bookingDetails) => {
+        const bookingData = {
             user_id: user.id,
             package_id: selectedPackage.id,
             vehicle_id: vehicleId,
             booking_date: bookingDate,
-            jumlah_penumpang: passengerCount,
+            jumlah_penumpang: parseInt(passengerCount),
             total_price: selectedPackage.price * passengerCount,
-        });
+        };
 
+        const success = await addBooking(bookingData);
         if (success) {
             localStorage.removeItem("selectedPackageId");
             localStorage.removeItem("passengerCount");
-            setMessage("Booking berhasil!");
-            router.push("/dashboard");
-        } else {
-            setMessage("Booking gagal.");
+            router.push("/pesanan-saya/booking-package");
         }
     };
 
@@ -117,7 +136,9 @@ export default function BookingsPage() {
                     >
                         <option value="">-- Pilih Kendaraan --</option>
                         {Array.isArray(vehicles) && vehicles.map(vehicle => (
-                            <option key={vehicle.id} value={vehicle.id}>{vehicle.name}</option>
+                            <option key={vehicle.id} value={vehicle.id}>
+                                {vehicle.name} - {vehicle.type}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -137,6 +158,15 @@ export default function BookingsPage() {
                 {message && <p className="text-center text-sm text-blue-600">{message}</p>}
                 {error && <p className="text-center text-sm text-red-600">{error}</p>}
             </form>
+
+            {showPaymentModal && (
+                <PaymentModal 
+                    isOpen={showPaymentModal}
+                    onClose={() => setShowPaymentModal(false)}
+                    bookingDetails={bookingData}
+                    onConfirm={handleConfirmBooking}
+                />
+            )}
         </section>
     );
 }

@@ -105,6 +105,7 @@ export default function PengajuanDetailModal({ pengajuan, onClose, onApprove, lo
             active={pengajuan.status === "ditolak"}
             label="Ditolak"
             rejected={pengajuan.status === "ditolak"}
+            disabled={pengajuan.status === "lunas"}
           />
         </div>
         <hr className="mb-4" />

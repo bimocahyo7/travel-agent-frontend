@@ -13,7 +13,6 @@ export default function InvoiceCustomer({
 }) {
   if (!invoice) return null;
 
-  const [clicked, setClicked] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [paymentProof, setPaymentProof] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -33,12 +32,10 @@ export default function InvoiceCustomer({
   const isButtonDisabled = !invoice.total || invoice.total < 1;
 
   // Button aktif jika status menunggu_persetujuan
-  const isButtonActive =
-    pengajuan.status === "menunggu_persetujuan" && !clicked;
+  const isButtonActive = pengajuan.status === "menunggu_persetujuan";
 
   // Handler klik button
   const handleClick = () => {
-    setClicked(true);
     if (onNextStep) onNextStep();
   };
 
@@ -87,125 +84,140 @@ export default function InvoiceCustomer({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-2xl p-6 max-w-2xl mx-auto animate-fade-in">
-      {/* Header dengan ikon */}
-      <div className="flex items-center gap-3 mb-6 border-b pb-4">
-        <FileText className="text-green-600 w-8 h-8" />
-        <span className="font-extrabold text-2xl text-gray-800">Invoice</span>
-      </div>
+    <div className="relative">
+      <div className="bg-white rounded-xl shadow-2xl p-6 max-w-2xl mx-auto animate-fade-in relative z-20">
+        {/* Watermark LUNAS jika status lunas */}
+        {pengajuan.status === "lunas" && (
+          <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-30">
+            <span
+              className="text-[8vw] md:text-[5vw] font-extrabold text-green-300 opacity-20"
+              style={{ transform: "rotate(-25deg)", userSelect: "none" }}
+            >
+              LUNAS
+            </span>
+          </div>
+        )}
+        {/* Header dengan ikon */}
+        <div className="flex items-center gap-3 mb-6 border-b pb-4">
+          <FileText className="text-green-600 w-8 h-8" />
+          <span className="font-extrabold text-2xl text-gray-800">Invoice</span>
+        </div>
 
-      {/* Info Pengajuan dengan Card Design */}
-      {pengajuan && (
-        <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <h3 className="font-semibold text-gray-700 mb-3 text-lg">
-            Informasi Pengajuan
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <InfoItem label="ID Pengajuan" value={pengajuan.id} />
-            <InfoItem label="Instansi" value={pengajuan.institution} />
-            <InfoItem label="Pemohon" value={pengajuan.applicant} />
-            <InfoItem label="Tujuan" value={pengajuan.destination} />
-            <InfoItem
-              label="Tanggal Berangkat"
-              value={new Date(pengajuan.departure_date).toLocaleDateString(
-                "id-ID",
-                {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                },
-              )}
-            />
-            <InfoItem
-              label="Tanggal Kembali"
-              value={new Date(pengajuan.return_date).toLocaleDateString(
-                "id-ID",
-                {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                },
-              )}
-            />
-            <div className="md:col-span-2">
-              <InfoItem label="Peserta" value={pengajuan.participants} />
+        {/* Info Pengajuan dengan Card Design */}
+        {pengajuan && (
+          <div className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 className="font-semibold text-gray-700 mb-3 text-lg">
+              Informasi Pengajuan
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <InfoItem label="ID Pengajuan" value={pengajuan.id} />
+              <InfoItem label="Instansi" value={pengajuan.institution} />
+              <InfoItem label="Pemohon" value={pengajuan.applicant} />
+              <InfoItem label="Tujuan" value={pengajuan.destination} />
+              <InfoItem
+                label="Tanggal Berangkat"
+                value={new Date(pengajuan.departure_date).toLocaleDateString(
+                  "id-ID",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
+              />
+              <InfoItem
+                label="Tanggal Kembali"
+                value={new Date(pengajuan.return_date).toLocaleDateString(
+                  "id-ID",
+                  {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
+              />
+              <div className="md:col-span-2">
+                <InfoItem label="Peserta" value={pengajuan.participants} />
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Tanggal Invoice */}
-      <div className="mb-4 p-3 bg-green-50 rounded-lg text-sm text-green-700 flex items-center gap-2">
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
-        <span>Invoice dikirim: </span>
-        <span className="font-semibold">{invoice.sent_date}</span>
-      </div>
-
-      {/* Tabel Invoice */}
-      <div className="overflow-x-auto">
-        <table className="w-full mb-4 border rounded-lg overflow-hidden">
-          <thead>
-            <tr className="bg-green-50">
-              <th className="text-left px-3 py-2 font-semibold text-green-700">
-                Item
-              </th>
-              <th className="text-right px-3 py-2 font-semibold text-green-700">
-                Harga
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.items &&
-              invoice.items.map((item, idx) => (
-                <tr key={idx} className="hover:bg-green-50 transition">
-                  <td className="px-3 py-2">{item.name}</td>
-                  <td className="text-right px-3 py-2">
-                    Rp {item.price.toLocaleString("id-ID")}
-                  </td>
-                </tr>
-              ))}
-            <tr className="font-bold bg-green-100 text-green-800 text-lg">
-              <td className="px-3 py-2">Total</td>
-              <td className="text-right px-3 py-2">
-                Rp {invoice.total?.toLocaleString("id-ID")}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      {/* Tombol Aksi */}
-      <div className="flex gap-2 justify-end mt-4">
-        <Button
-          onClick={handleClick}
-          disabled={!isButtonActive}
-          className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow transition-all duration-200 text-base font-semibold ${
-            isButtonActive
-              ? "bg-green-600 hover:bg-green-700 text-white"
-              : "bg-gray-400 text-white cursor-not-allowed"
-          }`}
-        >
-          <CheckCircle2 className="w-5 h-5" />
-          {!isButtonActive ? "Setuju & Lanjutkan" : "Setuju & Lanjutkan"}
-        </Button>
-
-        {/* Render PaymentSection jika status menunggu_pembayaran */}
-        {pengajuan.status === "menunggu_pembayaran" && (
-          <PaymentSection pengajuan={pengajuan} invoice={invoice} />
         )}
+
+        {/* Tanggal Invoice */}
+        {pengajuan.status === "menunggu_pembayaran" && invoice.sent_date && (
+          <div className="mb-4 p-3 bg-green-50 rounded-lg text-sm text-green-700 flex items-center gap-2">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <span>Invoice dikirim: </span>
+            <span className="font-semibold">{invoice.sent_date}</span>
+          </div>
+        )}
+
+        {/* Tabel Invoice */}
+        <div className="overflow-x-auto">
+          <table className="w-full mb-4 border rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-green-50">
+                <th className="text-left px-3 py-2 font-semibold text-green-700">
+                  Item
+                </th>
+                <th className="text-right px-3 py-2 font-semibold text-green-700">
+                  Harga
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoice.items &&
+                invoice.items.map((item, idx) => (
+                  <tr key={idx} className="hover:bg-green-50 transition">
+                    <td className="px-3 py-2">{item.name}</td>
+                    <td className="text-right px-3 py-2">
+                      Rp {item.price.toLocaleString("id-ID")}
+                    </td>
+                  </tr>
+                ))}
+              <tr className="font-bold bg-green-100 text-green-800 text-lg">
+                <td className="px-3 py-2">Total</td>
+                <td className="text-right px-3 py-2">
+                  Rp {invoice.total?.toLocaleString("id-ID")}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {/* Tombol Aksi */}
+        <div className="flex gap-2 justify-end mt-4">
+          <Button
+            onClick={handleClick}
+            disabled={!isButtonActive}
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg shadow transition-all duration-200 text-base font-semibold ${
+              isButtonActive
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-gray-400 text-white cursor-not-allowed"
+            }`}
+          >
+            <CheckCircle2 className="w-5 h-5" />
+            {!isButtonActive ? "Setuju & Lanjutkan" : "Setuju & Lanjutkan"}
+          </Button>
+
+          {/* Render PaymentSection jika status menunggu_pembayaran */}
+          {pengajuan.status === "menunggu_pembayaran" && (
+            <PaymentSection pengajuan={pengajuan} invoice={invoice} />
+          )}
+        </div>
       </div>
     </div>
   );

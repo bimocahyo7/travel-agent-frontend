@@ -32,6 +32,7 @@ import InvoiceModal from "../InvoiceModal";
 import BarcodeSendModal from "../BarcodeSendModal";
 import PaymentModal from "../PaymentModal";
 import DetailPengajuanModal from "../DetailPengajuanModal";
+import PaymentReceivedModal from "../PaymentReceivedModal";
 
 export function DataTable({ data, isLoading }) {
   const [sorting, setSorting] = useState([]);
@@ -48,6 +49,7 @@ export function DataTable({ data, isLoading }) {
   const [barcodeModalOpen, setBarcodeModalOpen] = useState(false);
   const [selectedPengajuanId, setSelectedPengajuanId] = useState(null);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentReceivedModalOpen, setPaymentReceivedModalOpen] = useState(false);
 
   // State for detail modal
   const [detailModalOpen, setDetailModalOpen] = useState(false);
@@ -69,6 +71,11 @@ export function DataTable({ data, isLoading }) {
     setPaymentModalOpen(true);
   };
 
+  const handleShowPaymentReceivedModal = (pengajuanId) => {
+    setSelectedPengajuanId(pengajuanId);
+    setPaymentReceivedModalOpen(true);
+  };
+
   // Handler for detail modal
   const handleShowDetailModal = (rowData) => {
     // Find the vehicle type
@@ -79,7 +86,7 @@ export function DataTable({ data, isLoading }) {
 
   const table = useReactTable({
     data,
-    columns: columns({ vehicles, onShowInvoice: handleShowInvoice, onShowBarcode: handleShowBarcodeModal }),
+    columns: columns({ vehicles, onShowInvoice: handleShowInvoice, onShowBarcode: handleShowBarcodeModal, onShowPaymentReceived: handleShowPaymentReceivedModal }),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -252,6 +259,11 @@ export function DataTable({ data, isLoading }) {
         open={detailModalOpen}
         onClose={() => setDetailModalOpen(false)}
         pengajuanData={selectedPengajuanDetail}
+      />
+      <PaymentReceivedModal
+        open={paymentReceivedModalOpen}
+        onClose={() => setPaymentReceivedModalOpen(false)}
+        pengajuanId={selectedPengajuanId}
       />
     </div>
   );
