@@ -80,7 +80,7 @@ const data = {
       items: [
         { title: "Pengajuan", url: "/admin/pengajuan" },
         { title: "Invoice", url: "/admin/pengajuan/invoice" },
-        { title: "Payment", url: "/admin/pengajuan/paymentsub" },
+        { title: "Payment Submission", url: "/admin/pengajuan/paymentsub" },
       ],
     },
     {

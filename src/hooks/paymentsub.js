@@ -51,15 +51,18 @@ export function usePaymentsub() {
     }
   };
 
-  // Get single payment details
-  const getPaymentDetails = async (id) => {
+  // Get single payment details by pengajuan_id
+  const getPaymentDetails = async (pengajuanId) => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/paymentsub/${id}`);
+      // Change the endpoint to get by pengajuan_id
+      const { data } = await axios.get(
+        `/api/paymentsub/by-pengajuan/${pengajuanId}`,
+      );
       return data;
     } catch (err) {
       setError(err.message);
-      throw err;
+      return null;
     } finally {
       setLoading(false);
     }
@@ -97,7 +100,7 @@ export function usePaymentsub() {
       setLoading(true);
       const { data } = await axios.post(
         "/api/paymentsub/generate-barcode",
-        payload
+        payload,
       );
       return data;
     } catch (err) {
@@ -112,7 +115,7 @@ export function usePaymentsub() {
   const getBarcodeByPengajuan = async (pengajuanId) => {
     try {
       const { data } = await axios.get(
-        `/api/paymentsub/barcode/${pengajuanId}`
+        `/api/paymentsub/barcode/${pengajuanId}`,
       );
       return data;
     } catch (err) {
@@ -127,7 +130,7 @@ export function usePaymentsub() {
       setLoading(true);
       const { data } = await axios.post(
         `/api/paymentsub/verify/${id}`,
-        payload
+        payload,
       );
       await fetchPayments();
       return data;
@@ -145,10 +148,10 @@ export function usePaymentsub() {
       setLoading(true);
       const { data } = await axios.get(`/api/paymentsub/${id}`);
       setPaymentStatus({
-        status: data.status || 'belum_lunas',
+        status: data.status || "belum_lunas",
         verifiedBy: data.verified_by,
         verifiedAt: data.verified_at,
-        amountPaid: data.amount_paid
+        amountPaid: data.amount_paid,
       });
       return data;
     } catch (err) {
@@ -163,7 +166,9 @@ export function usePaymentsub() {
   const getBarcodeDetails = async (pengajuanId) => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/paymentsub/barcode/${pengajuanId}`);
+      const { data } = await axios.get(
+        `/api/paymentsub/barcode/${pengajuanId}`,
+      );
       setBarcodeDetails(data.barcode);
       return data;
     } catch (err) {
@@ -178,6 +183,17 @@ export function usePaymentsub() {
   // Clear barcode details
   const clearBarcodeDetails = () => {
     setBarcodeDetails(null);
+  };
+
+  // Check payment status by pengajuan ID
+  const checkPaymentStatus = async (pengajuanId) => {
+    try {
+      const { data } = await axios.get(`/api/paymentsub/status/${pengajuanId}`);
+      return data;
+    } catch (err) {
+      setError(err.message);
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -204,5 +220,6 @@ export function usePaymentsub() {
     getPaymentStatus,
     getBarcodeDetails,
     clearBarcodeDetails,
+    checkPaymentStatus,
   };
 }
