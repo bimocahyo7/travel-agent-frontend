@@ -1,38 +1,49 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X, TicketsPlane } from "lucide-react";
-import { useState, useEffect } from "react";
+import {
+  Menu,
+  X,
+  TicketsPlane,
+  TicketIcon,
+  Settings,
+  LogOut,
+  User,
+} from "lucide-react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from '@/hooks/auth';
+import ProfileModal from "@/components/auth/ProfileModal";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/auth";
 
 function Navbar() {
-  // Menggunakan middleware 'optional' untuk tidak memaksa redirect ke login
-  const { user } = useAuth({ middleware: 'optional' });
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleNavigateLogin = () => {
+    router.push("/login");
   };
 
   const handleNavigateRegister = () => {
     router.push("/register");
   };
 
-  // Function untuk menentukan URL dashboard berdasarkan role
-  const getDashboardUrl = () => {
-    if (!user) return "/login";
-    if (user.role === 'admin') {
-      return "/admin/dashboard";
-    } else {
-      return "/dashboard";
-    }
-  };
-
   return (
     <nav className="fixed w-full bg-[#EEF7FF] backdrop-blur-md border-b border-slate-300 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -47,15 +58,21 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/#destinations" className="text-gray-600 hover:text-primary">
+            {/* <Link
+              href="/#destinations"
+              className="text-gray-600 hover:text-primary"
+            >
               Destinations
             </Link>
-            <Link href="/#packages" className="text-gray-600 hover:text-primary">
+            <Link
+              href="/#packages"
+              className="text-gray-600 hover:text-primary"
+            >
               Packages
             </Link>
             <Link href="/#about" className="text-gray-600 hover:text-primary">
               About Us
-            </Link>
+            </Link> */}
             {/* <Link href="/#contact" className="text-gray-600 hover:text-primary">
               Contact
             </Link> */}
@@ -63,23 +80,75 @@ function Navbar() {
 
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
-              <Link
-                href={getDashboardUrl()}
-                className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
-                Dashboard
-              </Link>
+              <div className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex items-center gap-2 cursor-pointer bg-gradient-to-r from-cyan-50 via-cyan-100/70 to-cyan-50 border border-cyan-200/60 shadow-sm rounded-3xl px-3 py-1.5">
+                      <Avatar className="h-8 w-8 border-2 border-cyan-200/80 shadow-sm">
+                        <AvatarImage
+                          src={user.profilePhotoUrl}
+                          alt={user.name}
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-cyan-600 to-cyan-700 text-white">
+                          <User className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="hidden md:block">
+                        <p className="text-sm font-medium bg-gradient-to-r from-cyan-800 to-cyan-600 bg-clip-text text-transparent">
+                          {user.name}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 mt-2" align="end">
+                    <div className="px-2 py-1.5 border-b border-slate-100">
+                      <p className="text-sm font-medium text-slate-900">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-slate-500 truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 cursor-pointer"
+                      onClick={() => router.push("/pesanan-saya")}
+                    >
+                      <TicketIcon className="w-4 h-4" />
+                      <span>Pesanan Saya</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 cursor-pointer"
+                      onClick={() => setIsProfileModalOpen(true)}
+                    >
+                      <Settings className="w-4 h-4" />
+                      <span>Edit Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 py-2 text-red-600 cursor-pointer"
+                      onClick={logout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span className="text-red-600">Keluar</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600">
+                <button
+                  type="button"
+                  onClick={handleNavigateLogin}
+                  className="px-4 py-2 text-base font-medium text-cyan-800 cursor-pointer"
+                >
                   Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full">
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNavigateRegister}
+                  className="px-4 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full cursor-pointer"
+                >
                   Sign Up
-                </Link>
+                </button>
               </>
             )}
           </div>
@@ -90,8 +159,13 @@ function Navbar() {
               onClick={toggleMenu}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
-              className="p-2 rounded-full">
-              {isMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              className="p-2 rounded-full"
+            >
+              {isMenuOpen ? (
+                <X className="w-5 h-5 text-white" />
+              ) : (
+                <Menu className="w-5 h-5 text-white" />
+              )}
             </button>
           </div>
         </div>
@@ -104,40 +178,45 @@ function Navbar() {
                 <div className="py-3">
                   <Link
                     href="/#destinations"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     Destinations
                   </Link>
                   <Link
                     href="/#packages"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     Packages
                   </Link>
                   <Link
                     href="/#about"
-                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100"
+                  >
                     About Us
                   </Link>
+                  {/* <Link
+                    href="/#contact"
+                    className="block px-4 py-2 text-base font-medium text-gray-600 hover:text-primary hover:bg-gray-100">
+                    Contact
+                  </Link> */}
                 </div>
-                <div className="px-4 py-4">
+                <div className="hidden md:flex items-center space-x-4">
                   {user ? (
-                    <Link
-                      href={getDashboardUrl()}
-                      className="block w-full px-3 py-2 text-center text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-md">
-                      Dashboard
-                    </Link>
+                    <DropdownProfile user={user} />
                   ) : (
                     <>
                       <Link
                         href="/login"
-                        className="block w-full mb-2 px-3 py-2 text-center text-base font-medium text-cyan-800 hover:text-cyan-600 border border-cyan-700 rounded-md">
+                        className="px-4 py-2 text-sm font-medium text-cyan-800 hover:text-cyan-600"
+                      >
                         Sign In
                       </Link>
-                      <button
-                        type="button"
-                        onClick={handleNavigateRegister}
-                        className="w-full px-3 py-2 text-base font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-md">
+                      <Link
+                        href="/register"
+                        className="px-4 py-2 text-sm font-medium text-white bg-cyan-700 hover:bg-cyan-600/90 rounded-full"
+                      >
                         Sign Up
-                      </button>
+                      </Link>
                     </>
                   )}
                 </div>
@@ -146,6 +225,10 @@ function Navbar() {
           </div>
         )}
       </div>
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
     </nav>
   );
 }

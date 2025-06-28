@@ -1,30 +1,26 @@
-import AboutUs from "@/app/(customer)/landing/AboutUs";
-import Contact from "@/app/(customer)/landing/Contact";
-import Destination from "@/app/(customer)/landing/Destination";
-import Intro from "@/app/(customer)/landing/Intro";
-import Navbar from "@/app/(customer)/landing/Navbar";
-import Package from "@/app/(customer)/landing/Package";
-import Footer from "@/app/(customer)/landing/Footer";
-import Filter from "@/app/(customer)/landing/TravelRequestForm";
-import TabNavigation from "@/app/(customer)/landing/TabNavigation";
+import AboutUs from "@/components/landing/AboutUs";
+import Destination from "@/components/landing/Destination";
+import Intro from "@/components/landing/Intro";
+import Navbar from "@/components/landing/Navbar";
+import Package from "@/components/landing/Package";
+import Footer from "@/components/landing/Footer";
+import Filter from "@/components/landing/TravelRequestForm";
+import TabNavigation from "@/components/landing/TabNavigation";
 import RoleGuard from "@/components/auth/RoleGuard";
-import Link from "next/link";
 
 export default function Dashboard() {
   return (
     <div>
-    <RoleGuard allowedRoles={["customer"]}>
-      <Navbar />
-      <Intro /> 
-      {/* <TabNavigation /> */}
-      <Destination />
-      <Filter />
-      <Package />
-      <AboutUs />
-      {/* <Contact /> */}
-      <Footer />
-      <Link href="/pengajuan" className="text-blue-600 underline">Kelola Pengajuan</Link>
-    </RoleGuard>
+      <RoleGuard allowedRoles={["customer"]}>
+        <Navbar />
+        <Intro />
+        {/* <TabNavigation /> */}
+        <Destination />
+        <Filter />
+        <Package />
+        <AboutUs />
+        <Footer />
+      </RoleGuard>
     </div>
   );
 }
