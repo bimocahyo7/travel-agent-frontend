@@ -16,10 +16,10 @@ export default function BookingDetailPage() {
     const fetchBookingData = async () => {
       try {
         const data = await getBooking(params.id);
-        console.log("Fetched booking data:", data); // Debug log
+        console.log("Fetched booking data:", data);
         setBooking(data);
       } catch (err) {
-        console.error("Error fetching booking:", err); // Debug log
+        console.error("Error fetching booking:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -31,7 +31,7 @@ export default function BookingDetailPage() {
 
   const handleGeneratePDF = async () => {
     try {
-      console.log("Generating PDF for booking:", booking); // Debug log
+      console.log("Generating PDF for booking:", booking);
       const pdfDataUrl = await generateCustomPDF(booking);
       // Buka PDF di tab baru
       window.open(pdfDataUrl);

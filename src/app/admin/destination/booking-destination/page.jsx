@@ -7,7 +7,7 @@ import { columns } from "@/components/admin/bookingdes/table/columns";
 export default function BookingdesPage() {
   const { bookingdes, loading, error } = useBookingdes();
 
-  console.log("BookingdesPage render:", { bookingdes, loading, error }); // Debug log
+  console.log("BookingdesPage render:", { bookingdes, loading, error });
 
   if (error) {
     return (
@@ -19,7 +19,7 @@ export default function BookingdesPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Booking Destinations</h1>
+      <h1 className="text-2xl font-bold">Booking Destination</h1>
       <p className="mt-1 mb-3 text-gray-600">
         Manage and monitor all destination booking activities
       </p>

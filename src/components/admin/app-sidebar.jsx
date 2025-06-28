@@ -59,8 +59,12 @@ const data = {
       url: "#",
       items: [
         { title: "Data Destinasi", url: "/admin/destination" },
-        { title: "Booking", url: "/admin/bookingdes" },
-        { title: "Payment", url: "/admin/destination/payment" },
+        {
+          title: "Booking Destination",
+          url: "/admin/destination/booking-destination",
+        },
+        // Initial Route
+        // { title: "Payment", url: "/admin/destination/payment" },
       ],
     },
     {
@@ -69,8 +73,8 @@ const data = {
       url: "#",
       items: [
         { title: "Data Package", url: "/admin/package" },
-        { title: "Booking", url: "/admin/package/booking" },
-        { title: "Payment", url: "/admin/package/payment" },
+        { title: "Booking Package", url: "/admin/package/booking-package" },
+        // { title: "Payment", url: "/admin/package/payment" },
       ],
     },
     {

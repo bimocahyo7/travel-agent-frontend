@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/admin/package/payment/table/data-table";
+import { DataTable } from "@/components/admin/payment/table/data-table";
 import { usePayments } from "@/hooks/payment";
 
 export default function PaymentPage() {

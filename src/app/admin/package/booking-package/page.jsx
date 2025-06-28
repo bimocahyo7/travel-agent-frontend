@@ -7,7 +7,7 @@ import { columns } from "@/components/admin/booking/table/columns";
 export default function BookingPage() {
   const { bookings, loading, error } = useBooking();
 
-  console.log("BookingPage render:", { bookings, loading, error }); // Debug log
+  console.log("BookingPage render:", { bookings, loading, error });
 
   if (error) {
     return (
@@ -19,15 +19,11 @@ export default function BookingPage() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">Bookings</h1>
+      <h1 className="text-2xl font-bold">Booking Package</h1>
       <p className="mt-1 mb-3 text-gray-600">
         Manage and monitor all booking activities
       </p>
-      <DataTable
-        columns={columns}
-        data={bookings || []}
-        loading={loading}
-      />
+      <DataTable columns={columns} data={bookings || []} loading={loading} />
     </div>
   );
 }
