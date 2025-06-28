@@ -4,8 +4,8 @@ import { useState } from "react";
 import HotelForm from "@/components/landing/layanan/HotelForm";
 import CarForm from "@/components/landing/layanan/CarForm";
 import { Button } from "@/components/ui/button";
-import { Plane, Hotel, Car, Gift } from "lucide-react";
-import FlightForm from "@/components/landing/layanan/FligthForm";
+import { Plane, Hotel, Car } from "lucide-react";
+import FlightForm from "@/components/landing/layanan/FlightForm";
 
 export default function TabNavigation() {
   const [activeTab, setActiveTab] = useState("flights");
@@ -26,8 +26,6 @@ export default function TabNavigation() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 pt-16">
       {" "}
-      {/* pt-16 untuk navbar */}
-      {/* Tombol Tab: sekarang di atas */}
       <div className="bg-white border-b shadow-md p-3 flex justify-around sticky top-16 z-40">
         <Button
           variant={activeTab === "flights" ? "default" : "ghost"}
