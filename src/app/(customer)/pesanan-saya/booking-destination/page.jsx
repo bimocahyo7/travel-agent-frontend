@@ -1,6 +1,6 @@
 "use client";
 
-import DataTable from "@/components/customer/destination/page";
+import BookingDestinationList from "@/components/customer/destination/BookingDestinationList";
 import { useBooking } from "@/hooks/booking";
 
 export default function DestinationPage() {
@@ -15,7 +15,10 @@ export default function DestinationPage() {
       {isError ? (
         <div className="text-red-500 mb-4">Gagal memuat data.</div>
       ) : (
-        <DataTable data={destinations || []} isLoading={isLoading} />
+        <BookingDestinationList
+          data={destinations || []}
+          isLoading={isLoading}
+        />
       )}
     </div>
   );

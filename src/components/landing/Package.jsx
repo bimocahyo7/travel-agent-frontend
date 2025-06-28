@@ -26,7 +26,7 @@ export default function Package() {
   const handleOrderNow = (packageId) => {
     if (packageId) {
       localStorage.setItem("selectedPackageId", packageId);
-      router.push("/booking-package");
+      router.push("/checkout-package");
     }
   };
 
