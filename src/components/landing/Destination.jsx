@@ -26,7 +26,7 @@ export default function Destination() {
   const handleOrderNow = (destinationId) => {
     if (destinationId) {
       localStorage.setItem("selectedDestinationId", destinationId);
-      router.push("/booking-destination");
+      router.push("/checkout-destination");
     }
   };
 

@@ -58,7 +58,7 @@ function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {/* <Link
+            <Link
               href="/#destinations"
               className="text-gray-600 hover:text-primary"
             >
@@ -72,7 +72,7 @@ function Navbar() {
             </Link>
             <Link href="/#about" className="text-gray-600 hover:text-primary">
               About Us
-            </Link> */}
+            </Link>
             {/* <Link href="/#contact" className="text-gray-600 hover:text-primary">
               Contact
             </Link> */}
