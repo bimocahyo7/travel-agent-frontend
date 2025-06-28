@@ -179,7 +179,7 @@ export const columns = [
 				<div className="flex gap-2 items-center">
 					<EditBookingStatusDialog booking={row.original} />
 					<Link
-						href={`/admin/booking/${row.original.id}`}
+						href={`/admin/package/booking-package/${row.original.id}`}
 						className="inline-block bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded"
 					>
 						Detail

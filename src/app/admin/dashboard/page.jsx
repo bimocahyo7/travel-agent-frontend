@@ -83,10 +83,6 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-800">
             Dashboard Overview
           </h1>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors">
-            <HiArrowPath className="text-gray-600" />
-            <span>Refresh</span>
-          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
