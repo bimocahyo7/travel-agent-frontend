@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useBookingdes } from "@/hooks/bookingdes";
-import PaymentModal from "@/components/PaymentModal";
+import PaymentModal from "@/components/customer/payment/PaymentModal";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
