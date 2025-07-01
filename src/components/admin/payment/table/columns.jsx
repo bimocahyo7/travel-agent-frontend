@@ -5,9 +5,6 @@ import { ArrowUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import EditPaymentDialog from "@/components/admin/payment/EditPaymentDialog";
 import { formatDate } from "@/lib/utils";
-import { useMemo } from "react";
-import { generateCustomPDF } from "../CustomPDFGenerator";
-import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 export function getPaymentColumns(users = [], handleShowBookingDetail, handleExportPDF) {

@@ -34,7 +34,7 @@ const data = {
     },
     {
       title: "Booking",
-      icon: BookText, // Pilih icon yang sesuai, misal BookText
+      icon: BookText,
       children: [
         {
           title: "Booking Destination",

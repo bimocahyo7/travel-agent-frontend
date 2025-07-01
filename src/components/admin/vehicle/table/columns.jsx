@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import EditVehicleDialog from "@/components/admin/vehicle/EditVehicleDialog"; // Import EditVehicleDialog
-import DeleteVehicleDialog from "@/components/admin/vehicle/DeleteVehicleDialog"; // Import DeleteVehicleDialog
+import EditVehicleDialog from "@/components/admin/vehicle/EditVehicleDialog";
+import DeleteVehicleDialog from "@/components/admin/vehicle/DeleteVehicleDialog";
 
 const VEHICLE_STATUS_LABELS = {
   available: "Available",
@@ -80,8 +80,8 @@ export const columns = [
 
       return (
         <div className="flex gap-2">
-          <EditVehicleDialog vehicle={rowData} /> {/* Use EditVehicleDialog */}
-          <DeleteVehicleDialog vehicle={rowData} /> {/* Use DeleteVehicleDialog */}
+          <EditVehicleDialog vehicle={rowData} />
+          <DeleteVehicleDialog vehicle={rowData} />
         </div>
       );
     },

@@ -12,15 +12,15 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // Keep Textarea for potential description field, although not in current vehicle schema
-import { useVehicle } from "@/hooks/vehicle"; // Use useVehicle hook
+import { Textarea } from "@/components/ui/textarea";
+import { useVehicle } from "@/hooks/vehicle";
 import { SquarePen } from "lucide-react";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import { Label } from "@/components/ui/label"; // Added Label import
+import { Label } from "@/components/ui/label";
 
-export default function EditVehicleDialog({ vehicle }) { // Receive vehicle prop
-  const { updateVehicle } = useVehicle(); // Use updateVehicle function
+export default function EditVehicleDialog({ vehicle }) {
+  const { updateVehicle } = useVehicle();
   const [form, setForm] = useState({
     name: vehicle.name,
     type: vehicle.type,
@@ -133,12 +133,12 @@ export default function EditVehicleDialog({ vehicle }) { // Receive vehicle prop
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-2xl w-full"> {/* Added width class */}
+      <DialogContent className="min-w-2xl w-full">
         <DialogHeader>
           <DialogTitle>Edit Vehicle</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"> {/* Updated grid layout */}
-          <div className="flex flex-col gap-4"> {/* Group fields */}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"> 
+          <div className="flex flex-col gap-4">
             <div className="space-y-2">
               <Label>Name</Label>
               <Input
@@ -236,7 +236,7 @@ export default function EditVehicleDialog({ vehicle }) { // Receive vehicle prop
               </div>
             </div>
           </div>
-          <div className="md:col-span-2 flex justify-end gap-2 mt-2"> {/* Footer full width */}
+          <div className="md:col-span-2 flex justify-end gap-2 mt-2">
             <DialogClose asChild>
               <Button
                 type="button"

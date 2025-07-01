@@ -6,7 +6,7 @@ import {
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react";
-import { useAuth } from "@/hooks/auth"; // Add this import
+import { useAuth } from "@/hooks/auth";
 import { usePaymentsub } from "@/hooks/paymentsub";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

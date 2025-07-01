@@ -61,13 +61,12 @@ export default function PengajuanDetailPage() {
     }
   };
 
-  // Fungsi approve (bisa disesuaikan dengan kebutuhan project)
+  // Fungsi approve
   const handleApprove = async () => {
     if (!pengajuan) return;
     const nextStatus = getNextStatus(pengajuan.status);
     if (!nextStatus) return;
     setLoadingId(pengajuan.id);
-    // TODO: Ganti dengan API update status pengajuan
     await updatePengajuan(pengajuan.id, { status: nextStatus });
     setLoadingId(null);
   };

@@ -25,8 +25,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { columns } from "./columns"; // Import vehicle columns
-import AddVehicleDialog from "../AddVehicleDialog"; // Import AddVehicleDialog
+import { columns } from "./columns";
+import AddVehicleDialog from "../AddVehicleDialog";
 import { useState } from "react";
 
 export function DataTable({ data, isLoading }) {
@@ -59,7 +59,7 @@ export function DataTable({ data, isLoading }) {
       <div className="flex items-center py-3 gap-2">
         {/* Search Bar */}
         <Input
-          placeholder="Filter name vehicle..." // Updated placeholder
+          placeholder="Filter name vehicle..."
           value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -67,7 +67,7 @@ export function DataTable({ data, isLoading }) {
           className="max-w-sm border-2 border-slate-400"
         />
         {/* Button Add Vehicle */}
-        <AddVehicleDialog /> {/* Use AddVehicleDialog */}
+        <AddVehicleDialog />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

@@ -263,14 +263,12 @@ export default function BookingPackagePage() {
             {/* Header */}
             <div className="flex justify-between items-start mb-8 relative">
               <div>
-                <h1 className="text-2xl font-bold text-blue-600">
-                  TRAVELNESIA
-                </h1>
+                <h1 className="text-2xl font-bold text-blue-600">TRIPNESIA</h1>
                 <p className="text-sm text-gray-500">
                   Your Trusted Travel Partner
                 </p>
                 <p className="text-sm text-gray-500">
-                  Email: info@travelnesia.com
+                  Email: info@tripnesia.com
                 </p>
                 <p className="text-sm text-gray-500">Phone: (021) 1234-5678</p>
               </div>
@@ -343,7 +341,7 @@ export default function BookingPackagePage() {
 
             {/* Footer */}
             <div className="text-center text-sm text-gray-500 mb-6">
-              <p>Thank you for choosing Travelnesia</p>
+              <p>Thank you for choosing Tripnesia</p>
             </div>
 
             <button

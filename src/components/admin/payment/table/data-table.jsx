@@ -33,7 +33,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import BookingDetailModal from "../BookingDetailModal";
-import jsPDF from "jspdf";
 import PDFPreviewModal from "../PDFPreviewModal";
 import { generateCustomPDF } from "../CustomPDFGenerator";
 

@@ -115,8 +115,6 @@ export function DataTable({ data, isLoading }) {
           }
           className="max-w-sm border-2 border-slate-400"
         />
-        {/* Button Add Pengajuan (optional, implement if needed) */}
-        {/* <AddPengajuanDialog /> */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

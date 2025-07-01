@@ -13,14 +13,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useVehicle } from "@/hooks/vehicle"; // Use useVehicle hook
+import { useVehicle } from "@/hooks/vehicle";
 import { SquarePlus } from "lucide-react";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 
 export default function AddVehicleDialog() {
-  const { addVehicle } = useVehicle(); // Use addVehicle function
+  const { addVehicle } = useVehicle();
   const [form, setForm] = useState({
     name: "",
     type: "",
@@ -90,7 +90,7 @@ export default function AddVehicleDialog() {
       formData.append("status", form.status);
       formData.append("description", form.description);
 
-      await addVehicle(formData); // Call addVehicle
+      await addVehicle(formData);
 
       resetForm();
       setOpen(false);
