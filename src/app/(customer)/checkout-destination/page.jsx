@@ -8,7 +8,7 @@ import { useVehicle } from "@/hooks/vehicle";
 import { useAuth } from "@/hooks/auth";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import PaymentModal from "@/components/PaymentModal";
+import PaymentModal from "@/components/customer/payment/PaymentModal";
 
 export default function BookingDestinationPage() {
   const router = useRouter();

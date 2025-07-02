@@ -7,8 +7,6 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { usePengajuan } from "@/hooks/pengajuan";
 import { toast } from "react-hot-toast";
 import InvoiceModal from "../InvoiceModal";
-// import EditPengajuanDialog from "@/components/admin/pengajuan/EditPengajuanDialog";
-// import DeletePengajuanAlert from "@/components/admin/pengajuan/DeletePengajuanAlert";
 
 export const columns = ({ vehicles = [], onShowInvoice, onShowBarcode, onShowPaymentReceived }) => [
   {

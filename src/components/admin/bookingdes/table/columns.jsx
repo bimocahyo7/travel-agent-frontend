@@ -24,8 +24,8 @@ export const columns = [
     header: "Customer",
   },
   {
-    id: "destination", // Add an id for filtering
-    accessorFn: (row) => row.destination?.name, // Use accessorFn for nested data
+    id: "destination",
+    accessorFn: (row) => row.destination?.name,
     header: ({ column }) => {
       return (
         <Button
@@ -92,7 +92,7 @@ export const columns = [
   },
   {
     id: "actions",
-    header: "Action", // Add this line to show the column header
+    header: "Action",
     cell: ({ row }) => {
       const booking = row.original;
 

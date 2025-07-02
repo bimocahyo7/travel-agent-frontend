@@ -4,6 +4,7 @@ import { CheckCircle2, FileText } from "lucide-react";
 import axios from "@/lib/axios";
 import { toast } from "react-hot-toast";
 import PaymentSection from "./PaymentSection";
+import { formatRupiah } from "@/lib/utils";
 
 export default function InvoiceCustomer({
   invoice,
@@ -185,14 +186,14 @@ export default function InvoiceCustomer({
                   <tr key={idx} className="hover:bg-green-50 transition">
                     <td className="px-3 py-2">{item.name}</td>
                     <td className="text-right px-3 py-2">
-                      Rp {item.price.toLocaleString("id-ID")}
+                      {formatRupiah(item.price)}
                     </td>
                   </tr>
                 ))}
               <tr className="font-bold bg-green-100 text-green-800 text-lg">
                 <td className="px-3 py-2">Total</td>
                 <td className="text-right px-3 py-2">
-                  Rp {invoice.total?.toLocaleString("id-ID")}
+                  {formatRupiah(invoice.total)}
                 </td>
               </tr>
             </tbody>

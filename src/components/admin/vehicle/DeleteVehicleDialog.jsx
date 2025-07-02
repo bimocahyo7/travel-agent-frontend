@@ -13,18 +13,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { useVehicle } from "@/hooks/vehicle"; // Use useVehicle hook
+import { useVehicle } from "@/hooks/vehicle";
 import toast from "react-hot-toast";
 
-export default function DeleteVehicleDialog({ vehicle }) { // Receive vehicle prop
-  const { deleteVehicle } = useVehicle(); // Use deleteVehicle function
+export default function DeleteVehicleDialog({ vehicle }) {
+  const { deleteVehicle } = useVehicle();
 
   const handleDelete = async () => {
     try {
-      await deleteVehicle(vehicle.id); // Call deleteVehicle with vehicle id
-      toast.success("Kendaraan berhasil dihapus!"); // Update success message
-    } catch (err) { // Changed error variable name
-      toast.error(err?.response?.data?.message || "Gagal menghapus kendaraan!"); // Update error message
+      await deleteVehicle(vehicle.id);
+      toast.success("Kendaraan berhasil dihapus!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Gagal menghapus kendaraan!");
     }
   };
 

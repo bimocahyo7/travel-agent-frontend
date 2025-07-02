@@ -40,10 +40,9 @@ import {
 export function DataTable() {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
-  const [columnVisibility, setColumnVisibility] = useState({}); // Add this state
+  const [columnVisibility, setColumnVisibility] = useState({});
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
-  // Remove globalFilter state since we'll use columnFilters
 
   const {
     payments,
@@ -74,11 +73,11 @@ export function DataTable() {
     state: {
       sorting,
       columnFilters,
-      columnVisibility, // Add this to state
+      columnVisibility,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility, // Add this handler
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

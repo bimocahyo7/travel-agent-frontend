@@ -48,9 +48,9 @@ export const columns = [
 	{
 		id: "customer",
 		header: "Customer",
-		accessorKey: "user", // Change this if the field name is different
+		accessorKey: "user",
 		cell: ({ row }) => {
-			const user = row.original.user; // And this
+			const user = row.original.user;
 			return (
 				<div className="font-medium">
 					{user ? (
@@ -67,7 +67,7 @@ export const columns = [
 			);
 		},
 		filterFn: (row, id, value) => {
-			const user = row.original.user; // And this
+			const user = row.original.user;
 			if (!user) return false;
 
 			const searchValue = value.toLowerCase();
